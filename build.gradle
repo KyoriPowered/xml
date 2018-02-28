@@ -22,6 +22,14 @@ repositories {
   mavenCentral()
 }
 
+dependencies {
+  compile 'com.google.guava:guava:21.0'
+  compile 'net.kyori:blizzard:1.0.4-JDK8144185'
+  compile 'org.jdom:jdom2:2.0.6'
+  testCompile 'org.junit.jupiter:junit-jupiter-api:5.1.0'
+  testCompile 'org.junit.jupiter:junit-jupiter-engine:5.1.0'
+}
+
 task javadocJar(type: Jar) {
   classifier 'javadoc'
   from javadoc
@@ -65,7 +73,7 @@ if(project.hasProperty('sonatypeUsername') && project.hasProperty('sonatypePassw
         }
 
         pom.project {
-          description 'xml'
+          description 'A library for working with XML.'
           name project.name
           url 'https://github.com/KyoriPowered/xml/'
 

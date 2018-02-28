@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<test potato="okay">
+  <name>test</name>
+  <some-number>100</some-number>
+  <nested>
+    <foo>bar</foo>
+    <foo>baz</foo>
+  </nested>
+</test>
