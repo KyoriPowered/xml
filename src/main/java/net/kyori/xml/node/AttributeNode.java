@@ -25,72 +25,14 @@ package net.kyori.xml.node;
 
 import org.jdom2.Attribute;
 
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Stream;
-
-final class AttributeNode implements Node {
-  private final Attribute attribute;
-
-  AttributeNode(final Attribute attribute) {
-    this.attribute = attribute;
-  }
-
-  @Override
-  public String name() {
-    return this.attribute.getName();
-  }
-
-  @Override
-  public String value() {
-    return this.attribute.getValue();
-  }
-
-  @Override
-  public String normalizedValue() {
-    return this.value();
-  }
-
-  @Override
-  public Optional<Node> attribute(final String name) {
-    return Optional.empty();
-  }
-
-  @Override
-  public Stream<Node> attributes() {
-    return Stream.empty();
-  }
-
-  @Override
-  public Stream<Node> attributes(final Collection<String> names) {
-    return Stream.empty();
-  }
-
-  @Override
-  public Stream<Node> elements() {
-    return Stream.empty();
-  }
-
-  @Override
-  public Stream<Node> elements(final Collection<String> names) {
-    return Stream.empty();
-  }
-
-  @Override
-  public boolean equals(final Object other) {
-    if(this == other) {
-      return true;
-    }
-    if(other == null || this.getClass() != other.getClass()) {
-      return false;
-    }
-    final AttributeNode that = (AttributeNode) other;
-    return Objects.equals(this.attribute, that.attribute);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.attribute);
-  }
+/**
+ * A node around an {@link Attribute attribute}.
+ */
+public interface AttributeNode extends Node {
+  /**
+   * Gets the attribute.
+   *
+   * @return the attribute
+   */
+  Attribute attribute();
 }

@@ -25,76 +25,14 @@ package net.kyori.xml.node;
 
 import org.jdom2.Element;
 
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Stream;
-
-final class ElementNode implements Node {
-  private final Element element;
-
-  ElementNode(final Element element) {
-    this.element = element;
-  }
-
-  @Override
-  public String name() {
-    return this.element.getName();
-  }
-
-  @Override
-  public String value() {
-    return this.element.getText();
-  }
-
-  @Override
-  public String normalizedValue() {
-    return this.element.getTextNormalize();
-  }
-
-  @Override
-  public Optional<Node> attribute(final String name) {
-    return Optional.ofNullable(this.element.getAttribute(name)).map(Node::of);
-  }
-
-  @Override
-  public Stream<Node> attributes() {
-    return this.element.getAttributes().stream().map(Node::of);
-  }
-
-  @Override
-  public Stream<Node> attributes(final Collection<String> names) {
-    return this.element.getAttributes().stream()
-      .filter(attribute -> names.contains(attribute.getName()))
-      .map(Node::of);
-  }
-
-  @Override
-  public Stream<Node> elements() {
-    return this.element.getChildren().stream().map(Node::of);
-  }
-
-  @Override
-  public Stream<Node> elements(final Collection<String> names) {
-    return this.element.getChildren().stream()
-      .filter(attribute -> names.contains(attribute.getName()))
-      .map(Node::of);
-  }
-
-  @Override
-  public boolean equals(final Object other) {
-    if(this == other) {
-      return true;
-    }
-    if(other == null || this.getClass() != other.getClass()) {
-      return false;
-    }
-    final ElementNode that = (ElementNode) other;
-    return Objects.equals(this.element, that.element);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.element);
-  }
+/**
+ * A node around an {@link Element element}.
+ */
+public interface ElementNode extends Node {
+  /**
+   * Gets the element.
+   *
+   * @return the element
+   */
+  Element element();
 }

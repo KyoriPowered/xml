@@ -21,24 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.node;
+package net.kyori.xml;
 
-import com.google.common.collect.MoreCollectors;
-
-import java.util.stream.Stream;
-
-public final class Nodes {
-  private Nodes() {
+/**
+ * An exception involving XML.
+ */
+public class XMLException extends Exception {
+  public XMLException() {
   }
 
-  /**
-   * Require a single node from the given stream.
-   *
-   * @param stream the stream
-   * @return the node
-   * @throws IllegalArgumentException if the stream contains more than one node
-   */
-  public static Node requireSingle(final Stream<Node> stream) {
-    return stream.collect(MoreCollectors.onlyElement());
+  public XMLException(final String message) {
+    super(message);
+  }
+
+  public XMLException(final String message, final Throwable cause) {
+    super(message, cause);
+  }
+
+  public XMLException(final Throwable cause) {
+    super(cause);
+  }
+
+  public XMLException(final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace) {
+    super(message, cause, enableSuppression, writableStackTrace);
   }
 }

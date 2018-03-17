@@ -23,6 +23,7 @@
  */
 package net.kyori.xml.node;
 
+import com.google.common.collect.MoreCollectors;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.junit.jupiter.api.BeforeAll;
@@ -57,8 +58,8 @@ class NodeTest {
   @Test
   void testValues() {
     assertEquals("okay", this.root.attribute("potato").map(Node::value).orElse(null));
-    assertEquals("test", Nodes.requireSingle(this.root.elements("name")).value());
-    assertEquals("100", Nodes.requireSingle(this.root.elements("some-number")).value());
+    assertEquals("test", this.root.elements("name").collect(MoreCollectors.onlyElement()).value());
+    assertEquals("100", this.root.elements("some-number").collect(MoreCollectors.onlyElement()).value());
     assertEquals(Arrays.asList("bar", "baz"), this.root.elements("nested").collect(Collectors.toList()).stream()
       .flatMap(node -> node.elements("foo")).map(Node::value).collect(Collectors.toList()));
   }

@@ -24,6 +24,7 @@
 package net.kyori.xml.node;
 
 import com.google.common.collect.Sets;
+import net.kyori.xml.XMLException;
 import org.jdom2.Attribute;
 import org.jdom2.Element;
 
@@ -38,8 +39,8 @@ public interface Node {
    * @param attribute the attribute
    * @return the node
    */
-  static Node of(final Attribute attribute) {
-    return new AttributeNode(attribute);
+  static AttributeNode of(final Attribute attribute) {
+    return new AttributeNodeImpl(attribute);
   }
 
   /**
@@ -48,8 +49,8 @@ public interface Node {
    * @param element the element
    * @return the node
    */
-  static Node of(final Element element) {
-    return new ElementNode(element);
+  static ElementNode of(final Element element) {
+    return new ElementNodeImpl(element);
   }
 
   /**
@@ -109,6 +110,17 @@ public interface Node {
    * @return the attribute
    */
   Optional<Node> attribute(final String name);
+
+  /**
+   * Gets a required attribute by its name.
+   *
+   * @param name the name
+   * @return the attribute
+   * @throws XMLException if the attribute is not available
+   */
+  default Node requireAttribute(final String name) throws XMLException {
+    return this.attribute(name).orElseThrow(() -> new XMLException("required attribute '" + name + "' not available"));
+  }
 
   /**
    * Creates a stream of nodes from the attributes of this node.
