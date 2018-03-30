@@ -29,6 +29,7 @@ import org.jdom2.Attribute;
 import org.jdom2.Element;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -84,7 +85,17 @@ public interface Node {
   }
 
   /**
-   * Creates a stream of nodes from the attributes and children elements matching a set of names of this node.
+   * Creates a stream of nodes from the attributes and children elements of this node matching a name.
+   *
+   * @param name the name
+   * @return the node stream
+   */
+  default Stream<Node> nodes(final String name) {
+    return this.nodes(Collections.singleton(name));
+  }
+
+  /**
+   * Creates a stream of nodes from the attributes and children elements of this node matching a set of names.
    *
    * @param names the names
    * @return the node stream
@@ -94,7 +105,7 @@ public interface Node {
   }
 
   /**
-   * Creates a stream of nodes from the attributes and children elements matching a set of names of this node.
+   * Creates a stream of nodes from the attributes and children elements of this node matching a set of names.
    *
    * @param names the names
    * @return the node stream
@@ -130,7 +141,7 @@ public interface Node {
   Stream<Node> attributes();
 
   /**
-   * Creates a stream of nodes from the attributes matching a set of names of this node.
+   * Creates a stream of nodes from the attributes of this node matching a set of names.
    *
    * @param names the names
    * @return the attribute node stream
@@ -140,7 +151,7 @@ public interface Node {
   }
 
   /**
-   * Creates a stream of nodes from the attributes matching a set of names of this node.
+   * Creates a stream of nodes from the attributes of this node matching a set of names.
    *
    * @param names the names
    * @return the attribute node stream
@@ -155,7 +166,17 @@ public interface Node {
   Stream<Node> elements();
 
   /**
-   * Creates a stream of nodes from the children elements matching a set of names of this node.
+   * Creates a stream of nodes from the children elements of this node matching a name.
+   *
+   * @param name the name
+   * @return the element node stream
+   */
+  default Stream<Node> elements(final String name) {
+    return this.elements(Collections.singleton(name));
+  }
+
+  /**
+   * Creates a stream of nodes from the children elements of this node matching a set of names.
    *
    * @param names the names
    * @return the element node stream
@@ -165,7 +186,7 @@ public interface Node {
   }
 
   /**
-   * Creates a stream of nodes from the children elements matching a set of names of this node.
+   * Creates a stream of nodes from the children elements of this node matching a set of names.
    *
    * @param names the names
    * @return the element node stream
