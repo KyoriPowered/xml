@@ -102,4 +102,9 @@ final class ElementNodeImpl implements ElementNode {
   public int hashCode() {
     return Objects.hash(this.element);
   }
+
+  @Override
+  public String toString() {
+    return "ElementNode{" + this.element.getName() + '}';
+  }
 }

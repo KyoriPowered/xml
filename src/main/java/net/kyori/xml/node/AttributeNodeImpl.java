@@ -98,4 +98,9 @@ final class AttributeNodeImpl implements AttributeNode {
   public int hashCode() {
     return Objects.hash(this.attribute);
   }
+
+  @Override
+  public String toString() {
+    return "AttributeNode{" + this.attribute.getName() + '}';
+  }
 }
