@@ -23,26 +23,35 @@
  */
 package net.kyori.xml;
 
+import net.kyori.xml.node.Node;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * An exception involving XML.
  */
 public class XMLException extends Exception {
-  public XMLException() {
-  }
+  @Nullable private final Node node;
 
   public XMLException(final String message) {
+    this(null, message);
+  }
+
+  public XMLException(@Nullable final Node node, final String message) {
     super(message);
+    this.node = node;
   }
 
-  public XMLException(final String message, final Throwable cause) {
+  public XMLException(final String message, @Nullable final Throwable cause) {
+    this(null, message, cause);
+  }
+
+  public XMLException(@Nullable final Node node, final String message, @Nullable final Throwable cause) {
     super(message, cause);
+    this.node = node;
   }
 
-  public XMLException(final Throwable cause) {
-    super(cause);
-  }
-
-  public XMLException(final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace) {
-    super(message, cause, enableSuppression, writableStackTrace);
+  @Nullable
+  public Node node() {
+    return this.node;
   }
 }

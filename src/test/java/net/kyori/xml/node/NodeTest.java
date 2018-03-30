@@ -24,6 +24,7 @@
 package net.kyori.xml.node;
 
 import com.google.common.collect.MoreCollectors;
+import net.kyori.xml.XMLException;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.junit.jupiter.api.BeforeAll;
@@ -36,6 +37,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class NodeTest {
@@ -62,5 +64,11 @@ class NodeTest {
     assertEquals("100", this.root.elements("some-number").collect(MoreCollectors.onlyElement()).value());
     assertEquals(Arrays.asList("bar", "baz"), this.root.elements("nested").collect(Collectors.toList()).stream()
       .flatMap(node -> node.elements("foo")).map(Node::value).collect(Collectors.toList()));
+  }
+
+  @Test
+  void testMissingAttribute() {
+    final XMLException exception = assertThrows(XMLException.class, () -> this.root.requireAttribute("nothing"));
+    assertEquals("missing required attribute 'nothing'", exception.getMessage());
   }
 }

@@ -43,21 +43,6 @@ final class ElementNodeImpl implements ElementNode {
   }
 
   @Override
-  public String name() {
-    return this.element.getName();
-  }
-
-  @Override
-  public String value() {
-    return this.element.getText();
-  }
-
-  @Override
-  public String normalizedValue() {
-    return this.element.getTextNormalize();
-  }
-
-  @Override
   public Optional<Node> attribute(final String name) {
     return Optional.ofNullable(this.element.getAttribute(name)).map(Node::of);
   }

@@ -35,4 +35,19 @@ public interface ElementNode extends Node {
    * @return the element
    */
   Element element();
+
+  @Override
+  default String name() {
+    return this.element().getName();
+  }
+
+  @Override
+  default String value() {
+    return this.element().getText();
+  }
+
+  @Override
+  default String normalizedValue() {
+    return this.element().getTextNormalize();
+  }
 }

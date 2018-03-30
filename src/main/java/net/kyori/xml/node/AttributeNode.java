@@ -25,6 +25,10 @@ package net.kyori.xml.node;
 
 import org.jdom2.Attribute;
 
+import java.util.Collection;
+import java.util.Optional;
+import java.util.stream.Stream;
+
 /**
  * A node around an {@link Attribute attribute}.
  */
@@ -35,4 +39,49 @@ public interface AttributeNode extends Node {
    * @return the attribute
    */
   Attribute attribute();
+
+  @Override
+  default String name() {
+    return this.attribute().getName();
+  }
+
+  @Override
+  default String value() {
+    return this.attribute().getValue();
+  }
+
+  // Attribute values don't need to be normalised.
+  @Override
+  default String normalizedValue() {
+    return this.value();
+  }
+
+  /*
+   * Attributes don't have children.
+   */
+
+  @Override
+  default Optional<Node> attribute(final String name) {
+    return Optional.empty();
+  }
+
+  @Override
+  default Stream<Node> attributes() {
+    return Stream.empty();
+  }
+
+  @Override
+  default Stream<Node> attributes(final Collection<String> names) {
+    return Stream.empty();
+  }
+
+  @Override
+  default Stream<Node> elements() {
+    return Stream.empty();
+  }
+
+  @Override
+  default Stream<Node> elements(final Collection<String> names) {
+    return Stream.empty();
+  }
 }

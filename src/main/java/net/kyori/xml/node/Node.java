@@ -23,7 +23,7 @@
  */
 package net.kyori.xml.node;
 
-import com.google.common.collect.Sets;
+import com.google.common.collect.ImmutableSet;
 import net.kyori.xml.XMLException;
 import org.jdom2.Attribute;
 import org.jdom2.Element;
@@ -90,7 +90,7 @@ public interface Node {
    * @return the node stream
    */
   default Stream<Node> nodes(final String... names) {
-    return this.nodes(Sets.newHashSet(names));
+    return this.nodes(ImmutableSet.copyOf(names));
   }
 
   /**
@@ -119,7 +119,7 @@ public interface Node {
    * @throws XMLException if the attribute is not available
    */
   default Node requireAttribute(final String name) throws XMLException {
-    return this.attribute(name).orElseThrow(() -> new XMLException("required attribute '" + name + "' not available"));
+    return this.attribute(name).orElseThrow(() -> new XMLException(this, "missing required attribute '" + name + '\''));
   }
 
   /**
@@ -136,7 +136,7 @@ public interface Node {
    * @return the attribute node stream
    */
   default Stream<Node> attributes(final String... names) {
-    return this.attributes(Sets.newHashSet(names));
+    return this.attributes(ImmutableSet.copyOf(names));
   }
 
   /**
@@ -161,7 +161,7 @@ public interface Node {
    * @return the element node stream
    */
   default Stream<Node> elements(final String... names) {
-    return this.elements(Sets.newHashSet(names));
+    return this.elements(ImmutableSet.copyOf(names));
   }
 
   /**

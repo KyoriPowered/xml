@@ -25,10 +25,7 @@ package net.kyori.xml.node;
 
 import org.jdom2.Attribute;
 
-import java.util.Collection;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 final class AttributeNodeImpl implements AttributeNode {
   private final Attribute attribute;
@@ -40,46 +37,6 @@ final class AttributeNodeImpl implements AttributeNode {
   @Override
   public Attribute attribute() {
     return this.attribute;
-  }
-
-  @Override
-  public String name() {
-    return this.attribute.getName();
-  }
-
-  @Override
-  public String value() {
-    return this.attribute.getValue();
-  }
-
-  @Override
-  public String normalizedValue() {
-    return this.value();
-  }
-
-  @Override
-  public Optional<Node> attribute(final String name) {
-    return Optional.empty();
-  }
-
-  @Override
-  public Stream<Node> attributes() {
-    return Stream.empty();
-  }
-
-  @Override
-  public Stream<Node> attributes(final Collection<String> names) {
-    return Stream.empty();
-  }
-
-  @Override
-  public Stream<Node> elements() {
-    return Stream.empty();
-  }
-
-  @Override
-  public Stream<Node> elements(final Collection<String> names) {
-    return Stream.empty();
   }
 
   @Override
