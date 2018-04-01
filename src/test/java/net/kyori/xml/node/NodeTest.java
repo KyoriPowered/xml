@@ -24,15 +24,14 @@
 package net.kyori.xml.node;
 
 import com.google.common.collect.MoreCollectors;
+import net.kyori.xml.Testing;
 import net.kyori.xml.XMLException;
 import org.jdom2.JDOMException;
-import org.jdom2.input.SAXBuilder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -45,10 +44,7 @@ class NodeTest {
 
   @BeforeAll
   void init() throws IOException, JDOMException {
-    final SAXBuilder builder = new SAXBuilder();
-    try(final InputStream is = NodeTest.class.getResourceAsStream("/test.xml")) {
-      this.root = Node.of(builder.build(is).getRootElement());
-    }
+    this.root = Testing.read("/node_test.xml");
   }
 
   @Test
