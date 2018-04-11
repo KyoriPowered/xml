@@ -25,6 +25,8 @@ package net.kyori.xml.node;
 
 import com.google.common.collect.ImmutableSet;
 import net.kyori.xml.XMLException;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jdom2.Attribute;
 import org.jdom2.Element;
 
@@ -40,8 +42,18 @@ public interface Node {
    * @param attribute the attribute
    * @return the node
    */
-  static AttributeNode of(final Attribute attribute) {
+  static AttributeNode of(final @NonNull Attribute attribute) {
     return new AttributeNodeImpl(attribute);
+  }
+
+  /**
+   * Creates a node from an attribute.
+   *
+   * @param attribute the attribute
+   * @return the node
+   */
+  static Optional<AttributeNode> maybeOf(final @Nullable Attribute attribute) {
+    return attribute != null ? Optional.of(new AttributeNodeImpl(attribute)) : Optional.empty();
   }
 
   /**
@@ -50,8 +62,18 @@ public interface Node {
    * @param element the element
    * @return the node
    */
-  static ElementNode of(final Element element) {
+  static ElementNode of(final @NonNull Element element) {
     return new ElementNodeImpl(element);
+  }
+
+  /**
+   * Creates a node from an element.
+   *
+   * @param element the element
+   * @return the node
+   */
+  static Optional<ElementNode> maybeOf(final @Nullable Element element) {
+    return element != null ? Optional.of(new ElementNodeImpl(element)) : Optional.empty();
   }
 
   /**

@@ -30,28 +30,27 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * An exception involving XML.
  */
 public class XMLException extends Exception {
-  @Nullable private final Node node;
+  private final @Nullable Node node;
 
   public XMLException(final String message) {
     this(null, message);
   }
 
-  public XMLException(@Nullable final Node node, final String message) {
+  public XMLException(final @Nullable Node node, final String message) {
     super(message);
     this.node = node;
   }
 
-  public XMLException(final String message, @Nullable final Throwable cause) {
+  public XMLException(final String message, final @Nullable Throwable cause) {
     this(null, message, cause);
   }
 
-  public XMLException(@Nullable final Node node, final String message, @Nullable final Throwable cause) {
+  public XMLException(final @Nullable Node node, final String message, final @Nullable Throwable cause) {
     super(message, cause);
     this.node = node;
   }
 
-  @Nullable
-  public Node node() {
+  public @Nullable Node node() {
     return this.node;
   }
 }
