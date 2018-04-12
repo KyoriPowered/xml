@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test>
+  <things>
+    <thing>
+      <deeper>
+        <child/>
+        <child/>
+        <child/>
+      </deeper>
+      <deeper>
+        <child/>
+        <child/>
+        <child/>
+      </deeper>
+    </thing>
+    <thing>
+      <deeper>
+        <child/>
+        <child/>
+        <child/>
+      </deeper>
+      <deeper>
+        <child/>
+        <child/>
+        <child/>
+      </deeper>
+    </thing>
+  </things>
+</test>

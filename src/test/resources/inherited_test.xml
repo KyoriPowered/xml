@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <things abc="def" ghi="jkl">
+    <thing abc="fed"/>
+  </things>
+</root>
