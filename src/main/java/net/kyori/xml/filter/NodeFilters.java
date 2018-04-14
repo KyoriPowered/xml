@@ -77,6 +77,15 @@ public final class NodeFilters {
   }
 
   /**
+   * Gets a node filter that returns {@code true} when the depth is at least {@code minimumDepth}.
+   *
+   * @return a node filter
+   */
+  public static NodeFilter minimumDepth(final int minimumDepth) {
+    return (node, depth) -> depth >= minimumDepth;
+  }
+
+  /**
    * Gets a node filter that returns {@code true} if {@code names} is equal to the {@link Node#name() name} of the node.
    *
    * @param name the name
