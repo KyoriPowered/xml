@@ -26,9 +26,9 @@ package net.kyori.xml.flattener;
 import net.kyori.xml.filter.NodeFilter;
 import net.kyori.xml.filter.NodeFilters;
 import net.kyori.xml.node.Node;
+import net.kyori.xml.node.stream.NodeStream;
 
 import java.util.Set;
-import java.util.stream.Stream;
 
 /**
  * A node flattener that flattens a node into a stream of leaf nodes gathered from branch nodes.
@@ -47,12 +47,12 @@ public class BranchLeafNodeFlattener extends NodeFlattener.Impl {
   }
 
   @Override
-  public Stream<Node> flatten(final Node node, final int depth) {
+  public NodeStream flatten(final Node node, final int depth) {
     if(this.branchFilter.test(node, depth)) {
       return this.node(node, depth).nodes().flatMap(child -> this.flatten(child, depth + 1));
     } else if(this.leafFilter.test(node, depth)) {
-      return Stream.of(this.node(node, depth));
+      return NodeStream.of(this.node(node, depth));
     }
-    return Stream.empty();
+    return NodeStream.empty();
   }
 }

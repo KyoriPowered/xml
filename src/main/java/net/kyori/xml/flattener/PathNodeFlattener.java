@@ -25,10 +25,10 @@ package net.kyori.xml.flattener;
 
 import net.kyori.xml.filter.NodeFilter;
 import net.kyori.xml.node.Node;
+import net.kyori.xml.node.stream.NodeStream;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * A flattener which follows a path of node names.
@@ -47,10 +47,10 @@ public class PathNodeFlattener extends NodeFlattener.Impl {
   }
 
   @Override
-  public Stream<Node> flatten(final Node node, final int depth) {
+  public NodeStream flatten(final Node node, final int depth) {
     if(this.path.size() > depth && this.filter.test(node, depth)) {
       return node.nodes(this.path.get(depth)).flatMap(that -> this.flatten(that, depth + 1));
     }
-    return Stream.of(this.node(node, depth));
+    return NodeStream.of(this.node(node, depth));
   }
 }

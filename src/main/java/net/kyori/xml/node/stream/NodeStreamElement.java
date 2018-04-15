@@ -21,56 +21,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.flattener;
+package net.kyori.xml.node.stream;
 
-import net.kyori.xml.element.Elements;
-import net.kyori.xml.node.Node;
-import net.kyori.xml.node.stream.NodeStream;
-
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
-/*
- * If the word "flattener" is in the scrabble dictionary then it is a word, IntelliJ.
- * https://www.wordgamedictionary.com/dictionary/word/flattener/
- */
+public interface NodeStreamElement<T> {
+  NodeStreamElement<Object> EMPTY = Optional::empty;
 
-/**
- * Takes a node and flattens it into a stream of nodes, similar to
- * a {@link Stream#flatMap flatMap} operation on a {@link Stream}.
- */
-@FunctionalInterface
-public interface NodeFlattener extends Function<Node, NodeStream> {
-  @Override
-  default NodeStream apply(final Node node) {
-    return this.flatten(node);
+  static <T> NodeStreamElement<T> empty() {
+    return (NodeStreamElement) EMPTY;
   }
 
   /**
-   * Flattens a node.
+   * Gets an optional representing {@code T}.
    *
-   * @param node the node
-   * @return the flattened nodes
+   * @return an optional
    */
-  default NodeStream flatten(final Node node) {
-    return this.flatten(node, 0);
+  Optional<T> want();
+
+  /**
+   * Gets {@code T}.
+   *
+   * @return {@code T}
+   */
+  default T need() {
+    return this.want().orElseThrow(NoSuchElementException::new);
   }
 
   /**
-   * Flattens a node.
+   * Returns a stream element consisting of the result of applying the given
+   * function to {@code T}.
    *
-   * @param node the node
-   * @param depth the depth
-   * @return the flattened nodes
+   * @param mapper the function to apply to {@code T}
+   * @param <R> the type of the new stream element
+   * @return a new stream element
    */
-  NodeStream flatten(final Node node, final int depth);
-
-  abstract class Impl implements NodeFlattener {
-    protected Node node(final Node node, final int depth) {
-      if(depth < 1) {
-        return node;
-      }
-      return Elements.inherited(node);
-    }
+  default <R> NodeStreamElement<R> map(final Function<? super T, ? extends R> mapper) {
+    return () -> this.want().map(mapper);
   }
 }

@@ -25,6 +25,7 @@ package net.kyori.xml.node;
 
 import com.google.common.collect.ImmutableSet;
 import net.kyori.xml.XMLException;
+import net.kyori.xml.node.stream.NodeStream;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jdom2.Attribute;
@@ -33,7 +34,6 @@ import org.jdom2.Element;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 public interface Node {
   /**
@@ -102,8 +102,8 @@ public interface Node {
    *
    * @return the node stream
    */
-  default Stream<Node> nodes() {
-    return Stream.concat(this.attributes(), this.elements());
+  default NodeStream nodes() {
+    return NodeStream.concat(this.attributes(), this.elements());
   }
 
   /**
@@ -112,7 +112,7 @@ public interface Node {
    * @param name the name
    * @return the node stream
    */
-  default Stream<Node> nodes(final String name) {
+  default NodeStream nodes(final String name) {
     return this.nodes(Collections.singleton(name));
   }
 
@@ -122,7 +122,7 @@ public interface Node {
    * @param names the names
    * @return the node stream
    */
-  default Stream<Node> nodes(final String... names) {
+  default NodeStream nodes(final String... names) {
     return this.nodes(ImmutableSet.copyOf(names));
   }
 
@@ -132,8 +132,8 @@ public interface Node {
    * @param names the names
    * @return the node stream
    */
-  default Stream<Node> nodes(final Collection<String> names) {
-    return Stream.concat(this.attributes(names), this.elements(names));
+  default NodeStream nodes(final Collection<String> names) {
+    return NodeStream.concat(this.attributes(names), this.elements(names));
   }
 
   /**
@@ -160,7 +160,7 @@ public interface Node {
    *
    * @return the attribute node stream
    */
-  Stream<Node> attributes();
+  NodeStream attributes();
 
   /**
    * Creates a stream of nodes from the attributes of this node matching a set of names.
@@ -168,7 +168,7 @@ public interface Node {
    * @param names the names
    * @return the attribute node stream
    */
-  default Stream<Node> attributes(final String... names) {
+  default NodeStream attributes(final String... names) {
     return this.attributes(ImmutableSet.copyOf(names));
   }
 
@@ -178,14 +178,14 @@ public interface Node {
    * @param names the names
    * @return the attribute node stream
    */
-  Stream<Node> attributes(final Collection<String> names);
+  NodeStream attributes(final Collection<String> names);
 
   /**
    * Creates a stream of nodes from the children elements of this node.
    *
    * @return the element node stream
    */
-  Stream<Node> elements();
+  NodeStream elements();
 
   /**
    * Creates a stream of nodes from the children elements of this node matching a name.
@@ -193,7 +193,7 @@ public interface Node {
    * @param name the name
    * @return the element node stream
    */
-  default Stream<Node> elements(final String name) {
+  default NodeStream elements(final String name) {
     return this.elements(Collections.singleton(name));
   }
 
@@ -203,7 +203,7 @@ public interface Node {
    * @param names the names
    * @return the element node stream
    */
-  default Stream<Node> elements(final String... names) {
+  default NodeStream elements(final String... names) {
     return this.elements(ImmutableSet.copyOf(names));
   }
 
@@ -213,5 +213,5 @@ public interface Node {
    * @param names the names
    * @return the element node stream
    */
-  Stream<Node> elements(final Collection<String> names);
+  NodeStream elements(final Collection<String> names);
 }

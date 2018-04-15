@@ -23,11 +23,11 @@
  */
 package net.kyori.xml.node;
 
+import net.kyori.xml.node.stream.NodeStream;
 import org.jdom2.Attribute;
 
 import java.util.Collection;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 /**
  * A node around an {@link Attribute attribute}.
@@ -66,22 +66,22 @@ public interface AttributeNode extends Node {
   }
 
   @Override
-  default Stream<Node> attributes() {
-    return Stream.empty();
+  default NodeStream attributes() {
+    return NodeStream.empty();
   }
 
   @Override
-  default Stream<Node> attributes(final Collection<String> names) {
-    return Stream.empty();
+  default NodeStream attributes(final Collection<String> names) {
+    return NodeStream.empty();
   }
 
   @Override
-  default Stream<Node> elements() {
-    return Stream.empty();
+  default NodeStream elements() {
+    return NodeStream.empty();
   }
 
   @Override
-  default Stream<Node> elements(final Collection<String> names) {
-    return Stream.empty();
+  default NodeStream elements(final Collection<String> names) {
+    return NodeStream.empty();
   }
 }

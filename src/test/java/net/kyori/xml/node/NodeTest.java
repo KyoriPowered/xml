@@ -49,8 +49,8 @@ class NodeTest {
 
   @Test
   void testFilter() {
-    assertEquals(3, this.root.elements().count());
-    assertEquals(2, this.root.elements("name", "some-number").count());
+    assertEquals(3, this.root.elements().stream().count());
+    assertEquals(2, this.root.elements("name", "some-number").stream().count());
   }
 
   @Test
@@ -58,7 +58,7 @@ class NodeTest {
     assertEquals("okay", this.root.attribute("potato").map(Node::value).orElse(null));
     assertEquals("test", this.root.elements("name").collect(MoreCollectors.onlyElement()).value());
     assertEquals("100", this.root.elements("some-number").collect(MoreCollectors.onlyElement()).value());
-    assertEquals(Arrays.asList("bar", "baz"), this.root.elements("nested").collect(Collectors.toList()).stream()
+    assertEquals(Arrays.asList("bar", "baz"), this.root.elements("nested")
       .flatMap(node -> node.elements("foo")).map(Node::value).collect(Collectors.toList()));
   }
 

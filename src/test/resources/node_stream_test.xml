@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<test>
+  <things>
+    <thing a="x">bar</thing>
+    <thing a="y" b="z">baz</thing>
+  </things>
+  <things>
+    <thing d="a">bar</thing>
+    <thing d="a">baz</thing>
+  </things>
+</test>

@@ -20,11 +20,14 @@ license {
 repositories {
   mavenLocal()
   mavenCentral()
+  maven {
+    url 'https://oss.sonatype.org/content/groups/public/'
+  }
 }
 
 dependencies {
   compile 'com.google.guava:guava:21.0'
-  compile 'net.kyori:lunar:1.0.4'
+  compile 'net.kyori:lunar:1.0.6-SNAPSHOT'
   compile 'org.checkerframework:checker-qual:2.4.0'
   compile 'org.jdom:jdom2:2.0.6'
   testCompile 'org.junit.jupiter:junit-jupiter-api:5.1.0'

@@ -23,12 +23,12 @@
  */
 package net.kyori.xml.node;
 
+import net.kyori.xml.node.stream.NodeStream;
 import org.jdom2.Element;
 
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 final class ElementNodeImpl implements ElementNode {
   private final Element element;
@@ -48,27 +48,27 @@ final class ElementNodeImpl implements ElementNode {
   }
 
   @Override
-  public Stream<Node> attributes() {
-    return this.element.getAttributes().stream().map(Node::of);
+  public NodeStream attributes() {
+    return NodeStream.of(this.element.getAttributes().stream().map(Node::of));
   }
 
   @Override
-  public Stream<Node> attributes(final Collection<String> names) {
-    return this.element.getAttributes().stream()
+  public NodeStream attributes(final Collection<String> names) {
+    return NodeStream.of(this.element.getAttributes().stream()
       .filter(attribute -> names.contains(attribute.getName()))
-      .map(Node::of);
+      .map(Node::of));
   }
 
   @Override
-  public Stream<Node> elements() {
-    return this.element.getChildren().stream().map(Node::of);
+  public NodeStream elements() {
+    return NodeStream.of(this.element.getChildren().stream().map(Node::of));
   }
 
   @Override
-  public Stream<Node> elements(final Collection<String> names) {
-    return this.element.getChildren().stream()
+  public NodeStream elements(final Collection<String> names) {
+    return NodeStream.of(this.element.getChildren().stream()
       .filter(attribute -> names.contains(attribute.getName()))
-      .map(Node::of);
+      .map(Node::of));
   }
 
   @Override

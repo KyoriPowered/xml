@@ -21,56 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.flattener;
+package net.kyori.xml.node.stream;
 
-import net.kyori.xml.element.Elements;
 import net.kyori.xml.node.Node;
-import net.kyori.xml.node.stream.NodeStream;
 
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-/*
- * If the word "flattener" is in the scrabble dictionary then it is a word, IntelliJ.
- * https://www.wordgamedictionary.com/dictionary/word/flattener/
- */
+final class NodeStreamImpl implements NodeStream {
+  static final NodeStream EMPTY = new NodeStreamImpl(Stream.empty());
+  private final Stream<Node> stream;
 
-/**
- * Takes a node and flattens it into a stream of nodes, similar to
- * a {@link Stream#flatMap flatMap} operation on a {@link Stream}.
- */
-@FunctionalInterface
-public interface NodeFlattener extends Function<Node, NodeStream> {
+  NodeStreamImpl(final Stream<Node> stream) {
+    this.stream = stream;
+  }
+
   @Override
-  default NodeStream apply(final Node node) {
-    return this.flatten(node);
+  public Stream<Node> stream() {
+    return this.stream;
   }
 
-  /**
-   * Flattens a node.
-   *
-   * @param node the node
-   * @return the flattened nodes
-   */
-  default NodeStream flatten(final Node node) {
-    return this.flatten(node, 0);
+  @Override
+  public NodeStream filter(final Predicate<? super Node> predicate) {
+    return new NodeStreamImpl(this.stream.filter(predicate));
   }
 
-  /**
-   * Flattens a node.
-   *
-   * @param node the node
-   * @param depth the depth
-   * @return the flattened nodes
-   */
-  NodeStream flatten(final Node node, final int depth);
+  @Override
+  public NodeStream flatMap(final Function<? super Node, ? extends NodeStream> function) {
+    return new NodeStreamImpl(this.stream.flatMap(node -> function.apply(node).stream()));
+  }
 
-  abstract class Impl implements NodeFlattener {
-    protected Node node(final Node node, final int depth) {
-      if(depth < 1) {
-        return node;
-      }
-      return Elements.inherited(node);
-    }
+  @Override
+  public void close() {
+    this.stream.close();
   }
 }
