@@ -30,7 +30,6 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 final class NodeStreamImpl implements NodeStream {
-  static final NodeStream EMPTY = new NodeStreamImpl(Stream.empty());
   private final Stream<Node> stream;
 
   NodeStreamImpl(final Stream<Node> stream) {

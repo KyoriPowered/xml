@@ -44,7 +44,7 @@ import java.util.stream.Stream;
  */
 public interface NodeStream extends CheckedAutoCloseable {
   static NodeStream empty() {
-    return NodeStreamImpl.EMPTY;
+    return NodeStream.of(Stream.empty());
   }
 
   static NodeStream of(final Node node) {
