@@ -26,7 +26,9 @@ package net.kyori.xml.node.stream;
 import net.kyori.xml.Testing;
 import net.kyori.xml.flattener.BranchLeafNodeFlattener;
 import net.kyori.xml.node.Node;
+import net.kyori.xml.parser.PrimitiveParser;
 import org.jdom2.JDOMException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -119,5 +121,22 @@ class NodeStreamTest {
         .stream()
         .count()
     );
+  }
+
+  @Test
+  void testParserMap() {
+    this.root.elements()
+      .named("parse")
+      .flatMap(Node::elements)
+      .named("bool")
+      .map(new BooleanParser())
+      .forEach(Assertions::assertTrue);
+  }
+
+  private static class BooleanParser implements PrimitiveParser<Boolean> {
+    @Override
+    public Boolean throwingParse(final Node node, final String string) {
+      return Boolean.valueOf(string);
+    }
   }
 }

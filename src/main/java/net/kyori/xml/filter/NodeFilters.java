@@ -79,6 +79,7 @@ public final class NodeFilters {
   /**
    * Gets a node filter that returns {@code true} when the depth is at least {@code minimumDepth}.
    *
+   * @param minimumDepth the minimum depth
    * @return a node filter
    */
   public static NodeFilter minimumDepth(final int minimumDepth) {

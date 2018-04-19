@@ -8,4 +8,10 @@
     <thing d="a">bar</thing>
     <thing d="a">baz</thing>
   </things>
+  <parse>
+    <bool>true</bool>
+    <bool>true</bool>
+    <bool>true</bool>
+    <bool>true</bool>
+  </parse>
 </test>

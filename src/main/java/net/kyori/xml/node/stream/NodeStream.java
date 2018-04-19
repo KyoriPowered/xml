@@ -141,6 +141,8 @@ public interface NodeStream extends CheckedAutoCloseable {
    * Performs a mutable reduction operation on the nodes of this stream using a {@link Collector}.
    *
    * @param collector the collector describing the reduction
+   * @param <R> the type of the result
+   * @param <A> the intermediate accumulation type of the {@code Collector}
    * @return the result of the reduction
    * @see Stream#collect(Collector)
    */

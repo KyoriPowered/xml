@@ -21,44 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.node.stream;
+package net.kyori.xml.parser;
 
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.function.Function;
+import net.kyori.xml.XMLException;
+import net.kyori.xml.node.Node;
 
-public interface NodeStreamElement<T> {
-  NodeStreamElement<Object> EMPTY = Optional::empty;
-
-  static <T> NodeStreamElement<T> empty() {
-    return (NodeStreamElement<T>) EMPTY;
+/**
+ * Parses a {@link Node}'s {@link Node#value() value} into {@code T}.
+ *
+ * @param <T> the parsed type
+ */
+public interface PrimitiveParser<T> extends Parser<T> {
+  @Override
+  default T throwingParse(final Node node) throws XMLException {
+    return this.throwingParse(node, node.value());
   }
 
   /**
-   * Gets an optional representing {@code T}.
+   * Parses a a {@link Node}'s {@link Node#value() value} into {@code T}.
    *
-   * @return an optional
+   * @param node the node
+   * @param string the node value
+   * @return the parsed value
+   * @throws XMLException if an exception occurred while parsing
    */
-  Optional<T> want();
-
-  /**
-   * Gets {@code T}.
-   *
-   * @return {@code T}
-   */
-  default T need() {
-    return this.want().orElseThrow(NoSuchElementException::new);
-  }
-
-  /**
-   * Returns a stream element consisting of the result of applying the given
-   * function to {@code T}.
-   *
-   * @param mapper the function to apply to {@code T}
-   * @param <R> the type of the new stream element
-   * @return a new stream element
-   */
-  default <R> NodeStreamElement<R> map(final Function<? super T, ? extends R> mapper) {
-    return () -> this.want().map(mapper);
-  }
+  T throwingParse(final Node node, final String string) throws XMLException;
 }
