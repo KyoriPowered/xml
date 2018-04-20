@@ -28,6 +28,7 @@ import net.kyori.xml.XMLException;
 import net.kyori.xml.node.Node;
 import net.kyori.xml.node.stream.NodeStream;
 
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -44,6 +45,17 @@ public interface Parser<T> extends Function<Node, T> {
   @Override
   default T apply(final Node node) {
     return this.parse(node);
+  }
+
+  /**
+   * Parses a {@link Node} into {@code T}.
+   *
+   * @param node the node
+   * @return the parsed value
+   */
+  @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+  default Optional<T> parse(final Optional<Node> node) {
+    return node.map(this::parse);
   }
 
   /**
