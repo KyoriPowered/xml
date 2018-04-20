@@ -21,13 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.flattener;
+package net.kyori.xml.node.flattener;
 
 import com.google.common.collect.MoreCollectors;
 import net.kyori.xml.Testing;
-import net.kyori.xml.filter.NodeFilters;
 import net.kyori.xml.node.ElementNode;
 import net.kyori.xml.node.Node;
+import net.kyori.xml.node.filter.NodeFilters;
 import org.jdom2.JDOMException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

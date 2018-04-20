@@ -21,56 +21,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.flattener;
+package net.kyori.xml.node.filter;
 
-import net.kyori.xml.element.Elements;
 import net.kyori.xml.node.Node;
-import net.kyori.xml.node.stream.NodeStream;
-
-import java.util.function.Function;
-import java.util.stream.Stream;
-
-/*
- * If the word "flattener" is in the scrabble dictionary then it is a word, IntelliJ.
- * https://www.wordgamedictionary.com/dictionary/word/flattener/
- */
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
- * Takes a node and flattens it into a stream of nodes, similar to
- * a {@link Stream#flatMap flatMap} operation on a {@link Stream}.
+ * A filter which accepts a node and depth.
  */
 @FunctionalInterface
-public interface NodeFlattener extends Function<Node, NodeStream> {
-  @Override
-  default NodeStream apply(final Node node) {
-    return this.flatten(node);
-  }
-
+public interface NodeFilter {
   /**
-   * Flattens a node.
-   *
-   * @param node the node
-   * @return the flattened nodes
-   */
-  default NodeStream flatten(final Node node) {
-    return this.flatten(node, 0);
-  }
-
-  /**
-   * Flattens a node.
+   * Tests if this filter allows {@code node} at a depth of {@code depth}.
    *
    * @param node the node
    * @param depth the depth
-   * @return the flattened nodes
+   * @return {@code true} if the filter allows the node
    */
-  NodeStream flatten(final Node node, final int depth);
+  boolean test(final @NonNull Node node, final int depth);
 
-  abstract class Impl implements NodeFlattener {
-    protected Node node(final Node node, final int depth) {
-      if(depth < 1) {
-        return node;
-      }
-      return Elements.inherited(node);
-    }
+  /**
+   * Logical and with {@code this} with {@code that}.
+   *
+   * @param that the other node depth filter
+   * @return a node filter
+   */
+  default @NonNull NodeFilter and(final @NonNull NodeFilter that) {
+    return (node, depth) -> this.test(node, depth) && that.test(node, depth);
+  }
+
+  /**
+   * Logical and with {@code this} with {@code that}.
+   *
+   * @param that the other node depth filter
+   * @return a node filter
+   */
+  default @NonNull NodeFilter or(final @NonNull NodeFilter that) {
+    return (node, depth) -> this.test(node, depth) || that.test(node, depth);
   }
 }

@@ -21,39 +21,61 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.node.stream;
+package net.kyori.xml.node.flattener;
 
+import net.kyori.xml.element.Elements;
 import net.kyori.xml.node.Node;
+import net.kyori.xml.node.stream.NodeStream;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-final class NodeStreamImpl implements NodeStream {
-  private final @NonNull Stream<Node> stream;
+/*
+ * If the word "flattener" is in the scrabble dictionary then it is a word, IntelliJ.
+ * https://www.wordgamedictionary.com/dictionary/word/flattener/
+ */
 
-  NodeStreamImpl(final @NonNull Stream<Node> stream) {
-    this.stream = stream;
+/**
+ * Takes a node and flattens it into a stream of nodes, similar to
+ * a {@link Stream#flatMap flatMap} operation on a {@link Stream}.
+ */
+@FunctionalInterface
+public interface NodeFlattener extends Function<Node, NodeStream> {
+  /**
+   * @deprecated only exists to implement {@link Function}
+   */
+  @Deprecated
+  @Override
+  default @NonNull NodeStream apply(final @NonNull Node node) {
+    return this.flatten(node);
   }
 
-  @Override
-  public @NonNull Stream<Node> stream() {
-    return this.stream;
+  /**
+   * Flattens a node.
+   *
+   * @param node the node
+   * @return the flattened nodes
+   */
+  default @NonNull NodeStream flatten(final @NonNull Node node) {
+    return this.flatten(node, 0);
   }
 
-  @Override
-  public @NonNull NodeStream filter(final @NonNull Predicate<? super Node> predicate) {
-    return new NodeStreamImpl(this.stream.filter(predicate));
-  }
+  /**
+   * Flattens a node.
+   *
+   * @param node the node
+   * @param depth the depth
+   * @return the flattened nodes
+   */
+  @NonNull NodeStream flatten(final @NonNull Node node, final int depth);
 
-  @Override
-  public @NonNull NodeStream flatMap(final @NonNull Function<? super Node, ? extends NodeStream> function) {
-    return new NodeStreamImpl(this.stream.flatMap(node -> function.apply(node).stream()));
-  }
-
-  @Override
-  public void close() {
-    this.stream.close();
+  abstract class Impl implements NodeFlattener {
+    protected @NonNull Node node(final @NonNull Node node, final int depth) {
+      if(depth < 1) {
+        return node;
+      }
+      return Elements.inherited(node);
+    }
   }
 }

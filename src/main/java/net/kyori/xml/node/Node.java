@@ -42,7 +42,7 @@ public interface Node {
    * @param attribute the attribute
    * @return the node
    */
-  static AttributeNode of(final @NonNull Attribute attribute) {
+  static @NonNull AttributeNode of(final @NonNull Attribute attribute) {
     return new AttributeNodeImpl(attribute);
   }
 
@@ -52,7 +52,7 @@ public interface Node {
    * @param attribute the attribute
    * @return the node
    */
-  static Optional<AttributeNode> maybeOf(final @Nullable Attribute attribute) {
+  static @NonNull Optional<AttributeNode> maybeOf(final @Nullable Attribute attribute) {
     return attribute != null ? Optional.of(new AttributeNodeImpl(attribute)) : Optional.empty();
   }
 
@@ -62,7 +62,7 @@ public interface Node {
    * @param element the element
    * @return the node
    */
-  static ElementNode of(final @NonNull Element element) {
+  static @NonNull ElementNode of(final @NonNull Element element) {
     return new ElementNodeImpl(element);
   }
 
@@ -72,7 +72,7 @@ public interface Node {
    * @param element the element
    * @return the node
    */
-  static Optional<ElementNode> maybeOf(final @Nullable Element element) {
+  static @NonNull Optional<ElementNode> maybeOf(final @Nullable Element element) {
     return element != null ? Optional.of(new ElementNodeImpl(element)) : Optional.empty();
   }
 
@@ -81,28 +81,28 @@ public interface Node {
    *
    * @return the name
    */
-  String name();
+  @NonNull String name();
 
   /**
    * Gets the value of this node.
    *
    * @return the value
    */
-  String value();
+  @NonNull String value();
 
   /**
    * Gets the normalized value of this node.
    *
    * @return the normalized value
    */
-  String normalizedValue();
+  @NonNull String normalizedValue();
 
   /**
    * Creates a stream of nodes from the attributes and children elements of this node.
    *
    * @return the node stream
    */
-  default NodeStream nodes() {
+  default @NonNull NodeStream nodes() {
     return NodeStream.concat(this.attributes(), this.elements());
   }
 
@@ -112,7 +112,7 @@ public interface Node {
    * @param name the name
    * @return the node stream
    */
-  default NodeStream nodes(final String name) {
+  default @NonNull NodeStream nodes(final @NonNull String name) {
     return this.nodes(Collections.singleton(name));
   }
 
@@ -122,7 +122,7 @@ public interface Node {
    * @param names the names
    * @return the node stream
    */
-  default NodeStream nodes(final String... names) {
+  default @NonNull NodeStream nodes(final @NonNull String... names) {
     return this.nodes(ImmutableSet.copyOf(names));
   }
 
@@ -132,7 +132,7 @@ public interface Node {
    * @param names the names
    * @return the node stream
    */
-  default NodeStream nodes(final Collection<String> names) {
+  default @NonNull NodeStream nodes(final @NonNull Collection<String> names) {
     return NodeStream.concat(this.attributes(names), this.elements(names));
   }
 
@@ -142,7 +142,7 @@ public interface Node {
    * @param name the name
    * @return the attribute
    */
-  Optional<Node> attribute(final String name);
+  @NonNull Optional<Node> attribute(final @NonNull String name);
 
   /**
    * Gets a required attribute by its name.
@@ -151,7 +151,7 @@ public interface Node {
    * @return the attribute
    * @throws XMLException if the attribute is not available
    */
-  default Node requireAttribute(final String name) throws XMLException {
+  default @NonNull Node requireAttribute(final @NonNull String name) throws XMLException {
     return this.attribute(name).orElseThrow(() -> new XMLException(this, "missing required attribute '" + name + '\''));
   }
 
@@ -160,7 +160,7 @@ public interface Node {
    *
    * @return the attribute node stream
    */
-  NodeStream attributes();
+  @NonNull NodeStream attributes();
 
   /**
    * Creates a stream of nodes from the attributes of this node matching a set of names.
@@ -168,7 +168,7 @@ public interface Node {
    * @param names the names
    * @return the attribute node stream
    */
-  default NodeStream attributes(final String... names) {
+  default @NonNull NodeStream attributes(final @NonNull String... names) {
     return this.attributes(ImmutableSet.copyOf(names));
   }
 
@@ -178,14 +178,14 @@ public interface Node {
    * @param names the names
    * @return the attribute node stream
    */
-  NodeStream attributes(final Collection<String> names);
+  @NonNull NodeStream attributes(final @NonNull Collection<String> names);
 
   /**
    * Creates a stream of nodes from the children elements of this node.
    *
    * @return the element node stream
    */
-  NodeStream elements();
+  @NonNull NodeStream elements();
 
   /**
    * Creates a stream of nodes from the children elements of this node matching a name.
@@ -193,7 +193,7 @@ public interface Node {
    * @param name the name
    * @return the element node stream
    */
-  default NodeStream elements(final String name) {
+  default @NonNull NodeStream elements(final @NonNull String name) {
     return this.elements(Collections.singleton(name));
   }
 
@@ -203,7 +203,7 @@ public interface Node {
    * @param names the names
    * @return the element node stream
    */
-  default NodeStream elements(final String... names) {
+  default @NonNull NodeStream elements(final @NonNull String... names) {
     return this.elements(ImmutableSet.copyOf(names));
   }
 
@@ -213,5 +213,5 @@ public interface Node {
    * @param names the names
    * @return the element node stream
    */
-  NodeStream elements(final Collection<String> names);
+  @NonNull NodeStream elements(final @NonNull Collection<String> names);
 }

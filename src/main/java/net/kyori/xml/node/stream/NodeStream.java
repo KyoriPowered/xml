@@ -27,6 +27,7 @@ import com.google.common.collect.MoreCollectors;
 import com.google.common.collect.Sets;
 import net.kyori.lunar.CheckedAutoCloseable;
 import net.kyori.xml.node.Node;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -43,19 +44,19 @@ import java.util.stream.Stream;
  * @see Stream
  */
 public interface NodeStream extends CheckedAutoCloseable {
-  static NodeStream empty() {
+  static @NonNull NodeStream empty() {
     return NodeStream.of(Stream.empty());
   }
 
-  static NodeStream of(final Node node) {
+  static @NonNull NodeStream of(final @NonNull Node node) {
     return of(Stream.of(node));
   }
 
-  static NodeStream of(final Stream<Node> stream) {
+  static @NonNull NodeStream of(final @NonNull Stream<Node> stream) {
     return new NodeStreamImpl(stream);
   }
 
-  static NodeStream concat(final NodeStream a, final NodeStream b) {
+  static @NonNull NodeStream concat(final @NonNull NodeStream a, final @NonNull NodeStream b) {
     return of(Stream.concat(a.stream(), b.stream()));
   }
 
@@ -64,7 +65,7 @@ public interface NodeStream extends CheckedAutoCloseable {
    *
    * @return the stream
    */
-  Stream<Node> stream();
+  @NonNull Stream<Node> stream();
 
   /**
    * Returns a stream consisting of the nodes of this stream that match the given predicate.
@@ -73,7 +74,7 @@ public interface NodeStream extends CheckedAutoCloseable {
    * @return a new stream
    * @see Stream#filter(Predicate)
    */
-  NodeStream filter(final Predicate<? super Node> predicate);
+  @NonNull NodeStream filter(final @NonNull Predicate<? super Node> predicate);
 
   /**
    * Returns a stream consisting of the nodes of this stream that are named {@code name}.
@@ -81,7 +82,7 @@ public interface NodeStream extends CheckedAutoCloseable {
    * @param name the name
    * @return a new stream
    */
-  default NodeStream named(final String name) {
+  default @NonNull NodeStream named(final @NonNull String name) {
     return this.named(Collections.singleton(name));
   }
 
@@ -91,7 +92,7 @@ public interface NodeStream extends CheckedAutoCloseable {
    * @param names the names
    * @return a new stream
    */
-  default NodeStream named(final String... names) {
+  default @NonNull NodeStream named(final @NonNull String... names) {
     return this.named(Sets.newHashSet(names));
   }
 
@@ -101,7 +102,7 @@ public interface NodeStream extends CheckedAutoCloseable {
    * @param names the names
    * @return a new stream
    */
-  default NodeStream named(final Collection<String> names) {
+  default @NonNull NodeStream named(final @NonNull Collection<String> names) {
     return this.filter(node -> names.contains(node.name()));
   }
 
@@ -125,7 +126,7 @@ public interface NodeStream extends CheckedAutoCloseable {
    * @return a new stream
    * @see Stream#flatMap(Function)
    */
-  NodeStream flatMap(final Function<? super Node, ? extends NodeStream> function);
+  @NonNull NodeStream flatMap(final @NonNull Function<? super Node, ? extends NodeStream> function);
 
   /**
    * Performs an action for each node of this stream.
@@ -133,7 +134,7 @@ public interface NodeStream extends CheckedAutoCloseable {
    * @param action a non-interfering action to perform on the nodes
    * @see Stream#forEach(Consumer)
    */
-  default void forEach(final Consumer<? super Node> action) {
+  default void forEach(final @NonNull Consumer<? super Node> action) {
     this.stream().forEach(action);
   }
 
@@ -146,7 +147,7 @@ public interface NodeStream extends CheckedAutoCloseable {
    * @return the result of the reduction
    * @see Stream#collect(Collector)
    */
-  default <R, A> R collect(final Collector<? super Node, A, R> collector) {
+  default <R, A> R collect(final @NonNull Collector<? super Node, A, R> collector) {
     return this.stream().collect(collector);
   }
 
@@ -156,7 +157,7 @@ public interface NodeStream extends CheckedAutoCloseable {
    * @return an optional describing some node of the stream, or an empty optional if the stream is empty
    * @see Stream#findAny()
    */
-  default Optional<Node> findAny() {
+  default @NonNull Optional<Node> findAny() {
     return this.stream().findAny();
   }
 
@@ -166,7 +167,7 @@ public interface NodeStream extends CheckedAutoCloseable {
    * @return an optional describing the first node of this stream, or an empty optional if the stream is empty
    * @see Stream#findFirst()
    */
-  default Optional<Node> findFirst() {
+  default @NonNull Optional<Node> findFirst() {
     return this.stream().findFirst();
   }
 
@@ -176,7 +177,7 @@ public interface NodeStream extends CheckedAutoCloseable {
    * @return a stream element representing a single node
    * @throws IllegalArgumentException if the stream consists of two or more nodes
    */
-  default NodeStreamElement<Node> one() {
+  default @NonNull NodeStreamElement<Node> one() {
     final Optional<Node> node = this.collect(MoreCollectors.toOptional());
     return () -> node;
   }

@@ -23,6 +23,8 @@
  */
 package net.kyori.xml.node.stream;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.Function;
@@ -30,7 +32,7 @@ import java.util.function.Function;
 public interface NodeStreamElement<T> {
   NodeStreamElement<Object> EMPTY = Optional::empty;
 
-  static <T> NodeStreamElement<T> empty() {
+  static <T> @NonNull NodeStreamElement<T> empty() {
     return (NodeStreamElement<T>) EMPTY;
   }
 
@@ -39,14 +41,14 @@ public interface NodeStreamElement<T> {
    *
    * @return an optional
    */
-  Optional<T> want();
+  @NonNull Optional<T> want();
 
   /**
    * Gets {@code T}.
    *
    * @return {@code T}
    */
-  default T need() {
+  default @NonNull T need() {
     return this.want().orElseThrow(NoSuchElementException::new);
   }
 
@@ -58,7 +60,7 @@ public interface NodeStreamElement<T> {
    * @param <R> the type of the new stream element
    * @return a new stream element
    */
-  default <R> NodeStreamElement<R> map(final Function<? super T, ? extends R> mapper) {
+  default <R> @NonNull NodeStreamElement<R> map(final @NonNull Function<? super T, ? extends R> mapper) {
     return () -> this.want().map(mapper);
   }
 }

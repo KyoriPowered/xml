@@ -23,6 +23,7 @@
  */
 package net.kyori.xml.node;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jdom2.Element;
 
 /**
@@ -34,20 +35,20 @@ public interface ElementNode extends Node {
    *
    * @return the element
    */
-  Element element();
+  @NonNull Element element();
 
   @Override
-  default String name() {
+  default @NonNull String name() {
     return this.element().getName();
   }
 
   @Override
-  default String value() {
+  default @NonNull String value() {
     return this.element().getText();
   }
 
   @Override
-  default String normalizedValue() {
+  default @NonNull String normalizedValue() {
     return this.element().getTextNormalize();
   }
 }

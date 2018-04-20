@@ -24,6 +24,8 @@
 package net.kyori.xml.node;
 
 import net.kyori.xml.node.stream.NodeStream;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jdom2.Element;
 
 import java.util.Collection;
@@ -31,48 +33,48 @@ import java.util.Objects;
 import java.util.Optional;
 
 final class ElementNodeImpl implements ElementNode {
-  private final Element element;
+  private final @NonNull Element element;
 
-  ElementNodeImpl(final Element element) {
+  ElementNodeImpl(final @NonNull Element element) {
     this.element = element;
   }
 
   @Override
-  public Element element() {
+  public @NonNull Element element() {
     return this.element;
   }
 
   @Override
-  public Optional<Node> attribute(final String name) {
+  public @NonNull Optional<Node> attribute(final @NonNull String name) {
     return Optional.ofNullable(this.element.getAttribute(name)).map(Node::of);
   }
 
   @Override
-  public NodeStream attributes() {
+  public @NonNull NodeStream attributes() {
     return NodeStream.of(this.element.getAttributes().stream().map(Node::of));
   }
 
   @Override
-  public NodeStream attributes(final Collection<String> names) {
+  public @NonNull NodeStream attributes(final @NonNull Collection<String> names) {
     return NodeStream.of(this.element.getAttributes().stream()
       .filter(attribute -> names.contains(attribute.getName()))
       .map(Node::of));
   }
 
   @Override
-  public NodeStream elements() {
+  public @NonNull NodeStream elements() {
     return NodeStream.of(this.element.getChildren().stream().map(Node::of));
   }
 
   @Override
-  public NodeStream elements(final Collection<String> names) {
+  public @NonNull NodeStream elements(final @NonNull Collection<String> names) {
     return NodeStream.of(this.element.getChildren().stream()
       .filter(attribute -> names.contains(attribute.getName()))
       .map(Node::of));
   }
 
   @Override
-  public boolean equals(final Object other) {
+  public boolean equals(final @Nullable Object other) {
     if(this == other) {
       return true;
     }

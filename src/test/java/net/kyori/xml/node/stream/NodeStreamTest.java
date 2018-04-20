@@ -24,9 +24,9 @@
 package net.kyori.xml.node.stream;
 
 import net.kyori.xml.Testing;
-import net.kyori.xml.flattener.BranchLeafNodeFlattener;
 import net.kyori.xml.node.Node;
-import net.kyori.xml.parser.PrimitiveParser;
+import net.kyori.xml.node.flattener.BranchLeafNodeFlattener;
+import net.kyori.xml.node.parser.PrimitiveParser;
 import org.jdom2.JDOMException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;

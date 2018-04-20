@@ -23,24 +23,26 @@
  */
 package net.kyori.xml.node;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jdom2.Attribute;
 
 import java.util.Objects;
 
 final class AttributeNodeImpl implements AttributeNode {
-  private final Attribute attribute;
+  private final @NonNull Attribute attribute;
 
-  AttributeNodeImpl(final Attribute attribute) {
+  AttributeNodeImpl(final @NonNull Attribute attribute) {
     this.attribute = attribute;
   }
 
   @Override
-  public Attribute attribute() {
+  public @NonNull Attribute attribute() {
     return this.attribute;
   }
 
   @Override
-  public boolean equals(final Object other) {
+  public boolean equals(final @Nullable Object other) {
     if(this == other) {
       return true;
     }

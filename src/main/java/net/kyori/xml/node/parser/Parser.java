@@ -21,12 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.parser;
+package net.kyori.xml.node.parser;
 
 import net.kyori.lunar.exception.Exceptions;
 import net.kyori.xml.XMLException;
 import net.kyori.xml.node.Node;
 import net.kyori.xml.node.stream.NodeStream;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -43,7 +44,7 @@ public interface Parser<T> extends Function<Node, T> {
    */
   @Deprecated
   @Override
-  default T apply(final Node node) {
+  default @NonNull T apply(final @NonNull Node node) {
     return this.parse(node);
   }
 
@@ -54,7 +55,7 @@ public interface Parser<T> extends Function<Node, T> {
    * @return the parsed value
    */
   @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-  default Optional<T> parse(final Optional<Node> node) {
+  default @NonNull Optional<T> parse(final @NonNull Optional<Node> node) {
     return node.map(this::parse);
   }
 
@@ -64,7 +65,7 @@ public interface Parser<T> extends Function<Node, T> {
    * @param node the node
    * @return the parsed value
    */
-  default T parse(final Node node) {
+  default @NonNull T parse(final @NonNull Node node) {
     return Exceptions.getOrRethrow(() -> this.throwingParse(node));
   }
 
@@ -75,7 +76,7 @@ public interface Parser<T> extends Function<Node, T> {
    * @return the parsed value
    * @throws XMLException if an exception occurred while parsing
    */
-  T throwingParse(final Node node) throws XMLException;
+  @NonNull T throwingParse(final @NonNull Node node) throws XMLException;
 
   /**
    * Parses a stream of {@link Node} into a stream of {@code T}.
@@ -83,7 +84,7 @@ public interface Parser<T> extends Function<Node, T> {
    * @param stream the node stream
    * @return the parsed value
    */
-  default Stream<T> parse(final NodeStream stream) {
+  default @NonNull Stream<T> parse(final @NonNull NodeStream stream) {
     return this.parse(stream.stream());
   }
 
@@ -93,7 +94,7 @@ public interface Parser<T> extends Function<Node, T> {
    * @param stream the node stream
    * @return the parsed value
    */
-  default Stream<T> parse(final Stream<Node> stream) {
+  default @NonNull Stream<T> parse(final @NonNull Stream<Node> stream) {
     return stream.map(this::parse);
   }
 }

@@ -24,6 +24,7 @@
 package net.kyori.xml.node;
 
 import net.kyori.xml.node.stream.NodeStream;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jdom2.Attribute;
 
 import java.util.Collection;
@@ -38,21 +39,21 @@ public interface AttributeNode extends Node {
    *
    * @return the attribute
    */
-  Attribute attribute();
+  @NonNull Attribute attribute();
 
   @Override
-  default String name() {
+  default @NonNull String name() {
     return this.attribute().getName();
   }
 
   @Override
-  default String value() {
+  default @NonNull String value() {
     return this.attribute().getValue();
   }
 
   // Attribute values don't need to be normalised.
   @Override
-  default String normalizedValue() {
+  default @NonNull String normalizedValue() {
     return this.value();
   }
 
@@ -61,27 +62,27 @@ public interface AttributeNode extends Node {
    */
 
   @Override
-  default Optional<Node> attribute(final String name) {
+  default @NonNull Optional<Node> attribute(final @NonNull String name) {
     return Optional.empty();
   }
 
   @Override
-  default NodeStream attributes() {
+  default @NonNull NodeStream attributes() {
     return NodeStream.empty();
   }
 
   @Override
-  default NodeStream attributes(final Collection<String> names) {
+  default @NonNull NodeStream attributes(final @NonNull Collection<String> names) {
     return NodeStream.empty();
   }
 
   @Override
-  default NodeStream elements() {
+  default @NonNull NodeStream elements() {
     return NodeStream.empty();
   }
 
   @Override
-  default NodeStream elements(final Collection<String> names) {
+  default @NonNull NodeStream elements(final @NonNull Collection<String> names) {
     return NodeStream.empty();
   }
 }

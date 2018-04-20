@@ -21,41 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.filter;
+package net.kyori.xml.node.parser;
 
+import net.kyori.xml.XMLException;
 import net.kyori.xml.node.Node;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
- * A filter which accepts a node and depth.
+ * Parses a {@link Node}'s {@link Node#value() value} into {@code T}.
+ *
+ * @param <T> the parsed type
  */
-@FunctionalInterface
-public interface NodeFilter {
+public interface PrimitiveParser<T> extends Parser<T> {
+  @Override
+  default @NonNull T throwingParse(final @NonNull Node node) throws XMLException {
+    return this.throwingParse(node, node.value());
+  }
+
   /**
-   * Tests if this filter allows {@code node} at a depth of {@code depth}.
+   * Parses a a {@link Node}'s {@link Node#value() value} into {@code T}.
    *
    * @param node the node
-   * @param depth the depth
-   * @return {@code true} if the filter allows the node
+   * @param string the node value
+   * @return the parsed value
+   * @throws XMLException if an exception occurred while parsing
    */
-  boolean test(final Node node, final int depth);
-
-  /**
-   * Logical and with {@code this} with {@code that}.
-   *
-   * @param that the other node depth filter
-   * @return a node filter
-   */
-  default NodeFilter and(final NodeFilter that) {
-    return (node, depth) -> this.test(node, depth) && that.test(node, depth);
-  }
-
-  /**
-   * Logical and with {@code this} with {@code that}.
-   *
-   * @param that the other node depth filter
-   * @return a node filter
-   */
-  default NodeFilter or(final NodeFilter that) {
-    return (node, depth) -> this.test(node, depth) || that.test(node, depth);
-  }
+  @NonNull T throwingParse(final @NonNull Node node, final @NonNull String string) throws XMLException;
 }

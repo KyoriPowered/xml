@@ -21,12 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.filter;
+package net.kyori.xml.node.filter;
 
 import com.google.common.collect.ImmutableSet;
 import net.kyori.xml.node.AttributeNode;
 import net.kyori.xml.node.ElementNode;
 import net.kyori.xml.node.Node;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.Collections;
 import java.util.Set;
@@ -45,7 +46,7 @@ public final class NodeFilters {
    *
    * @return a node filter
    */
-  public static NodeFilter alwaysFalse() {
+  public static @NonNull NodeFilter alwaysFalse() {
     return ALWAYS_FALSE;
   }
 
@@ -54,7 +55,7 @@ public final class NodeFilters {
    *
    * @return a node filter
    */
-  public static NodeFilter alwaysTrue() {
+  public static @NonNull NodeFilter alwaysTrue() {
     return ALWAYS_TRUE;
   }
 
@@ -63,7 +64,7 @@ public final class NodeFilters {
    *
    * @return a node filter
    */
-  public static NodeFilter onlyAttributes() {
+  public static @NonNull NodeFilter onlyAttributes() {
     return ONLY_ATTRIBUTES;
   }
 
@@ -72,7 +73,7 @@ public final class NodeFilters {
    *
    * @return a node filter
    */
-  public static NodeFilter onlyElements() {
+  public static @NonNull NodeFilter onlyElements() {
     return ONLY_ELEMENTS;
   }
 
@@ -82,7 +83,7 @@ public final class NodeFilters {
    * @param minimumDepth the minimum depth
    * @return a node filter
    */
-  public static NodeFilter minimumDepth(final int minimumDepth) {
+  public static @NonNull NodeFilter minimumDepth(final int minimumDepth) {
     return (node, depth) -> depth >= minimumDepth;
   }
 
@@ -92,7 +93,7 @@ public final class NodeFilters {
    * @param name the name
    * @return a node filter
    */
-  public static NodeFilter named(final String name) {
+  public static @NonNull NodeFilter named(final @NonNull String name) {
     return named(Collections.singleton(name));
   }
 
@@ -102,7 +103,7 @@ public final class NodeFilters {
    * @param names the names
    * @return a node filter
    */
-  public static NodeFilter named(final String... names) {
+  public static @NonNull NodeFilter named(final @NonNull String... names) {
     return named(ImmutableSet.copyOf(names));
   }
 
@@ -112,7 +113,7 @@ public final class NodeFilters {
    * @param names the names
    * @return a node filter
    */
-  public static NodeFilter named(final Set<String> names) {
+  public static @NonNull NodeFilter named(final @NonNull Set<String> names) {
     return (node, depth) -> names.contains(node.name());
   }
 }
