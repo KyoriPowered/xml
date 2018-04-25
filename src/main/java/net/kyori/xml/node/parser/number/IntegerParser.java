@@ -21,36 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.element;
+package net.kyori.xml.node.parser.number;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.jdom2.Element;
-import org.jdom2.located.Located;
-import org.jdom2.located.LocatedElement;
+import net.kyori.xml.XMLException;
+import net.kyori.xml.node.Node;
 
 /**
- * An alternative to {@link Element#clone()}.
+ * Parses a {@link Node} into an {@link Integer integer}.
  */
-public class ClonedElement extends LocatedElement {
-  public ClonedElement(final @NonNull Element that) {
-    super(that.getName(), that.getNamespace());
-
-    // Element#clone() does not copy over the parent, but we do
-    this.setParent(that.getParent());
-
-    // The source element is not required to be located
-    if(that instanceof Located) {
-      this.setLine(((Located) that).getLine());
-      this.setColumn(((Located) that).getColumn());
+public class IntegerParser implements NumberParser<Integer> {
+  @Override
+  public Integer throwingParse(final Node node, final String string) throws XMLException {
+    try {
+      return Integer.parseInt(string);
+    } catch(final NumberFormatException e) {
+      throw new XMLException(node, "Could not parse '" + string + "' as an int", e);
     }
-
-    // Copy over additional namespaces
-    that.getAdditionalNamespaces().forEach(this::addNamespaceDeclaration);
-
-    // Copy over attributes
-    that.getAttributes().forEach(attribute -> this.setAttribute(attribute.clone()));
-
-    // Copy content
-    this.setContent(that.cloneContent());
   }
 }

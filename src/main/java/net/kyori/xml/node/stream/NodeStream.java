@@ -44,18 +44,43 @@ import java.util.stream.Stream;
  * @see Stream
  */
 public interface NodeStream extends CheckedAutoCloseable {
+  /**
+   * Creates an empty node stream.
+   *
+   * @return a node stream
+   */
   static @NonNull NodeStream empty() {
     return NodeStream.of(Stream.empty());
   }
 
+  /**
+   * Creates a node stream consisting of a single node.
+   *
+   * @param node the node
+   * @return a node stream
+   */
   static @NonNull NodeStream of(final @NonNull Node node) {
     return of(Stream.of(node));
   }
 
+  /**
+   * Creates a node stream from a stream of nodes.
+   *
+   * @param stream the stream
+   * @return a node stream
+   */
   static @NonNull NodeStream of(final @NonNull Stream<Node> stream) {
     return new NodeStreamImpl(stream);
   }
 
+  /**
+   * Creates a lazily concatenated node stream whose elements are all the elements of the first stream followed by
+   * all the elements of the second stream.
+   *
+   * @param a the first node stream
+   * @param b the second node stream
+   * @return a node stream representing the concatenation of the two streams
+   */
   static @NonNull NodeStream concat(final @NonNull NodeStream a, final @NonNull NodeStream b) {
     return of(Stream.concat(a.stream(), b.stream()));
   }

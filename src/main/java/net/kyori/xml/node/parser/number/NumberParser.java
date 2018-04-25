@@ -21,36 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.element;
+package net.kyori.xml.node.parser.number;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.jdom2.Element;
-import org.jdom2.located.Located;
-import org.jdom2.located.LocatedElement;
+import net.kyori.xml.node.Node;
+import net.kyori.xml.node.parser.PrimitiveParser;
 
 /**
- * An alternative to {@link Element#clone()}.
+ * Parses a {@link Node} into a number of type {@code T}.
+ *
+ * @param <T> the parsed number type
  */
-public class ClonedElement extends LocatedElement {
-  public ClonedElement(final @NonNull Element that) {
-    super(that.getName(), that.getNamespace());
-
-    // Element#clone() does not copy over the parent, but we do
-    this.setParent(that.getParent());
-
-    // The source element is not required to be located
-    if(that instanceof Located) {
-      this.setLine(((Located) that).getLine());
-      this.setColumn(((Located) that).getColumn());
-    }
-
-    // Copy over additional namespaces
-    that.getAdditionalNamespaces().forEach(this::addNamespaceDeclaration);
-
-    // Copy over attributes
-    that.getAttributes().forEach(attribute -> this.setAttribute(attribute.clone()));
-
-    // Copy content
-    this.setContent(that.cloneContent());
-  }
+public interface NumberParser<T extends Number> extends PrimitiveParser<T> {
 }

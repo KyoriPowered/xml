@@ -32,6 +32,11 @@ import java.util.function.Function;
 public interface NodeStreamElement<T> {
   NodeStreamElement<Object> EMPTY = Optional::empty;
 
+  /**
+   * Gets an empty node stream element.
+   *
+   * @return a node stream element
+   */
   static <T> @NonNull NodeStreamElement<T> empty() {
     return (NodeStreamElement<T>) EMPTY;
   }

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<test>
+  <np>
+    <boolean>
+      <n>false</n>
+      <p>true</p>
+    </boolean>
+    <byte>
+      <n>-1</n>
+      <p>2</p>
+    </byte>
+    <double>
+      <n>-64.024399791242338265</n>
+      <p>64.28541278239204515</p>
+    </double>
+    <float>
+      <n>-64.5677465</n>
+      <p>64.21948814</p>
+    </float>
+    <int>
+      <n>-1644266465</n>
+      <p>533695713</p>
+    </int>
+    <long>
+      <n>-2122657314852929763</n>
+      <p>4370982310787917920</p>
+    </long>
+    <short>
+      <n>-21738</n>
+      <p>17212</p>
+    </short>
+  </np>
+</test>

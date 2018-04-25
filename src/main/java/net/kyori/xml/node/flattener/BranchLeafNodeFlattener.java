@@ -29,6 +29,7 @@ import net.kyori.xml.node.filter.NodeFilters;
 import net.kyori.xml.node.stream.NodeStream;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -37,6 +38,10 @@ import java.util.Set;
 public class BranchLeafNodeFlattener extends NodeFlattener.Impl {
   private final @NonNull NodeFilter branchFilter;
   private final @NonNull NodeFilter leafFilter;
+
+  public BranchLeafNodeFlattener(final @NonNull String branch, final @NonNull String leaf) {
+    this(Collections.singleton(branch), Collections.singleton(leaf));
+  }
 
   public BranchLeafNodeFlattener(final @NonNull Set<String> branches, final @NonNull Set<String> leafs) {
     this(NodeFilters.named(branches), NodeFilters.named(leafs));

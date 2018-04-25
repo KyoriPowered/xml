@@ -25,17 +25,35 @@ package net.kyori.xml.element;
 
 import net.kyori.xml.node.ElementNode;
 import net.kyori.xml.node.Node;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jdom2.Element;
 import org.jdom2.Parent;
 
 public interface Elements {
-  static void inherit(final Parent source, final Element target) {
+  /**
+   * Inherit attributes from {@code source} into {@code target}.
+   *
+   * @param source the source parent
+   * @param target the target element
+   */
+  static void inherit(final @Nullable Parent source, final @NonNull Element target) {
     if(source instanceof Element) {
       inherit((Element) source, target);
     }
   }
 
-  static void inherit(final Element source, final Element target) {
+  /**
+   * Inherit attributes from {@code source} into {@code target}.
+   *
+   * @param source the source element
+   * @param target the target element
+   */
+  static void inherit(final @Nullable Element source, final @NonNull Element target) {
+    if(source == null) {
+      return;
+    }
+
     // Copy attributes from the source to the target if the target doesn't already
     // have an attribute with the same name.
     source.getAttributes().stream()
@@ -43,14 +61,26 @@ public interface Elements {
       .forEach(attribute -> target.setAttribute(attribute.clone()));
   }
 
-  static Node inherited(final Node node) {
+  /**
+   * Returns an element which inherits attributes from its parent element, if present.
+   *
+   * @param node the node
+   * @return the inherited element
+   */
+  static @NonNull Node inherited(final @NonNull Node node) {
     if(node instanceof ElementNode) {
       return Node.of(inherited(((ElementNode) node).element()));
     }
     return node;
   }
 
-  static Element inherited(final Element element) {
+  /**
+   * Returns an element which inherits attributes from its parent element, if present.
+   *
+   * @param element the element
+   * @return the inherited element
+   */
+  static @NonNull Element inherited(final @NonNull Element element) {
     // Avoid inheriting on an already inherited element
     if(element instanceof InheritedElement) {
       return element;

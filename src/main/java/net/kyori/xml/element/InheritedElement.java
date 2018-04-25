@@ -23,13 +23,14 @@
  */
 package net.kyori.xml.element;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jdom2.Element;
 
 /**
  * An element which inherits attributes from its parent element, if present.
  */
 public class InheritedElement extends ClonedElement {
-  public InheritedElement(final Element that) {
+  public InheritedElement(final @NonNull Element that) {
     super(that);
     Elements.inherit(that.getParent(), this);
   }
