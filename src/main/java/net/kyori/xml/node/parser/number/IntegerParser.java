@@ -25,13 +25,14 @@ package net.kyori.xml.node.parser.number;
 
 import net.kyori.xml.XMLException;
 import net.kyori.xml.node.Node;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Parses a {@link Node} into an {@link Integer integer}.
  */
 public class IntegerParser implements NumberParser<Integer> {
   @Override
-  public Integer throwingParse(final Node node, final String string) throws XMLException {
+  public @NonNull Integer throwingParse(final @NonNull Node node, final @NonNull String string) throws XMLException {
     try {
       return Integer.parseInt(string);
     } catch(final NumberFormatException e) {

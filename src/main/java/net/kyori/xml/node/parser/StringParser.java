@@ -21,22 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.node.parser.number;
+package net.kyori.xml.node.parser;
 
-import net.kyori.xml.XMLException;
 import net.kyori.xml.node.Node;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
- * Parses a {@link Node} into a {@link Double double}.
+ * Parses a {@link Node} into a {@link String string}.
  */
-public class DoubleParser implements NumberParser<Double> {
+public class StringParser implements PrimitiveParser<String> {
   @Override
-  public @NonNull Double throwingParse(final @NonNull Node node, final @NonNull String string) throws XMLException {
-    try {
-      return Double.parseDouble(string);
-    } catch(final NumberFormatException e) {
-      throw new XMLException(node, "Could not parse '" + string + "' as a double", e);
-    }
+  public @NonNull String throwingParse(final @NonNull Node node, final @NonNull String string) {
+    return string;
   }
 }

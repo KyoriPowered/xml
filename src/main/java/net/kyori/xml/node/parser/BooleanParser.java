@@ -25,10 +25,14 @@ package net.kyori.xml.node.parser;
 
 import net.kyori.xml.XMLException;
 import net.kyori.xml.node.Node;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
+/**
+ * Parses a {@link Node} into a {@link Boolean boolean}.
+ */
 public class BooleanParser implements PrimitiveParser<Boolean> {
   @Override
-  public Boolean throwingParse(final Node node, final String string) throws XMLException {
+  public @NonNull Boolean throwingParse(final @NonNull Node node, final @NonNull String string) throws XMLException {
     if(string.equals("true")) {
       return true;
     } else if(string.equals("false")) {

@@ -25,13 +25,14 @@ package net.kyori.xml.node.parser.number;
 
 import net.kyori.xml.XMLException;
 import net.kyori.xml.node.Node;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Parses a {@link Node} into a {@link Long long}.
  */
 public class LongParser implements NumberParser<Long> {
   @Override
-  public Long throwingParse(final Node node, final String string) throws XMLException {
+  public @NonNull Long throwingParse(final @NonNull Node node, final @NonNull String string) throws XMLException {
     try {
       return Long.parseLong(string);
     } catch(final NumberFormatException e) {
