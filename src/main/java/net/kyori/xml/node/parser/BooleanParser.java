@@ -27,9 +27,12 @@ import net.kyori.xml.XMLException;
 import net.kyori.xml.node.Node;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
+import javax.inject.Singleton;
+
 /**
  * Parses a {@link Node} into a {@link Boolean boolean}.
  */
+@Singleton
 public class BooleanParser implements PrimitiveParser<Boolean> {
   @Override
   public @NonNull Boolean throwingParse(final @NonNull Node node, final @NonNull String string) throws XMLException {

@@ -26,9 +26,12 @@ package net.kyori.xml.node.parser;
 import net.kyori.xml.node.Node;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
+import javax.inject.Singleton;
+
 /**
  * Parses a {@link Node} into a {@link String string}.
  */
+@Singleton
 public class StringParser implements PrimitiveParser<String> {
   @Override
   public @NonNull String throwingParse(final @NonNull Node node, final @NonNull String string) {

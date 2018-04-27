@@ -21,25 +21,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.node.parser.number;
+package net.kyori.xml.node.parser;
 
-import net.kyori.xml.XMLException;
-import net.kyori.xml.node.Node;
+import com.google.inject.Binder;
+import com.google.inject.TypeLiteral;
+import com.google.inject.binder.AnnotatedBindingBuilder;
+import net.kyori.violet.FriendlyTypeLiteral;
+import net.kyori.violet.TypeArgument;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import javax.inject.Singleton;
-
 /**
- * Parses a {@link Node} into an {@link Integer integer}.
+ * A parser binder.
  */
-@Singleton
-public class IntegerParser implements NumberParser<Integer> {
-  @Override
-  public @NonNull Integer throwingParse(final @NonNull Node node, final @NonNull String string) throws XMLException {
-    try {
-      return Integer.parseInt(string);
-    } catch(final NumberFormatException e) {
-      throw new XMLException(node, "Could not parse '" + string + "' as an int", e);
-    }
+public class ParserBinder {
+  private final Binder binder;
+
+  public ParserBinder(final @NonNull Binder binder) {
+    this.binder = binder;
+  }
+
+  /**
+   * Creates a binding builder for binding a parser for {@code T}.
+   *
+   * @param type the type
+   * @param <T> the type
+   * @return a binding builder
+   */
+  public <T> @NonNull AnnotatedBindingBuilder<Parser<T>> bindParser(final @NonNull Class<T> type) {
+    return this.bindParser(TypeLiteral.get(type));
+  }
+
+  /**
+   * Creates a binding builder for binding a parser for {@code T}.
+   *
+   * @param type the type
+   * @param <T> the type
+   * @return a binding builder
+   */
+  public <T> @NonNull AnnotatedBindingBuilder<Parser<T>> bindParser(final @NonNull TypeLiteral<T> type) {
+    return this.binder.bind(new FriendlyTypeLiteral<Parser<T>>() {}.where(new TypeArgument<T>(type) {}));
   }
 }

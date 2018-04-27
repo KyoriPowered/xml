@@ -21,25 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.node.parser.number;
+package net.kyori.xml.node.parser;
 
-import net.kyori.xml.XMLException;
-import net.kyori.xml.node.Node;
-import org.checkerframework.checker.nullness.qual.NonNull;
-
-import javax.inject.Singleton;
+import net.kyori.violet.AbstractModule;
+import net.kyori.xml.node.parser.number.NumberParserModule;
 
 /**
- * Parses a {@link Node} into an {@link Integer integer}.
+ * A module that binds common parsers.
  */
-@Singleton
-public class IntegerParser implements NumberParser<Integer> {
+public final class ParserModule extends AbstractModule {
   @Override
-  public @NonNull Integer throwingParse(final @NonNull Node node, final @NonNull String string) throws XMLException {
-    try {
-      return Integer.parseInt(string);
-    } catch(final NumberFormatException e) {
-      throw new XMLException(node, "Could not parse '" + string + "' as an int", e);
-    }
+  protected void configure() {
+    this.install(new NumberParserModule());
+
+    final ParserBinder parsers = new ParserBinder(this.binder());
+    parsers.bindParser(Boolean.class).to(BooleanParser.class);
+    parsers.bindParser(String.class).to(StringParser.class);
   }
 }

@@ -21,25 +21,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.node.parser.number;
+package net.kyori.xml.node.parser;
 
+import com.google.inject.TypeLiteral;
 import net.kyori.xml.XMLException;
 import net.kyori.xml.node.Node;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import javax.inject.Singleton;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
+import javax.inject.Inject;
 
 /**
- * Parses a {@link Node} into an {@link Integer integer}.
+ * Parses a {@link Node} into an enum constant.
  */
-@Singleton
-public class IntegerParser implements NumberParser<Integer> {
-  @Override
-  public @NonNull Integer throwingParse(final @NonNull Node node, final @NonNull String string) throws XMLException {
-    try {
-      return Integer.parseInt(string);
-    } catch(final NumberFormatException e) {
-      throw new XMLException(node, "Could not parse '" + string + "' as an int", e);
+public class EnumParser<E extends Enum<E>> implements Parser<E> {
+  private final TypeLiteral<E> type;
+  private final Map<String, E> map = new HashMap<>();
+
+  public EnumParser(final @NonNull Class<E> type) {
+    this(TypeLiteral.get(type));
+  }
+
+  @Inject
+  public EnumParser(final @NonNull TypeLiteral<E> type) {
+    this.type = type;
+
+    for(final E constant : ((Class<E>) type.getRawType()).getEnumConstants()) {
+      this.map.put(constant.name().toLowerCase(Locale.ENGLISH), constant);
     }
+  }
+
+  @Override
+  public E throwingParse(final Node node) throws XMLException {
+    /* @Nullable */ final E constant = this.map.get(node.value().toLowerCase(Locale.ENGLISH).replace(' ', '_'));
+    if(constant != null) {
+      return constant;
+    }
+    throw new XMLException(node, "Could not find " + this.type.getRawType().getName() + " with name '" + node.value() + '\'');
   }
 }

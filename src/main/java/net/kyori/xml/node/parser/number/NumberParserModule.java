@@ -23,23 +23,21 @@
  */
 package net.kyori.xml.node.parser.number;
 
-import net.kyori.xml.XMLException;
-import net.kyori.xml.node.Node;
-import org.checkerframework.checker.nullness.qual.NonNull;
-
-import javax.inject.Singleton;
+import net.kyori.violet.AbstractModule;
+import net.kyori.xml.node.parser.ParserBinder;
 
 /**
- * Parses a {@link Node} into an {@link Integer integer}.
+ * A module that binds parsers for numbers.
  */
-@Singleton
-public class IntegerParser implements NumberParser<Integer> {
+public final class NumberParserModule extends AbstractModule {
   @Override
-  public @NonNull Integer throwingParse(final @NonNull Node node, final @NonNull String string) throws XMLException {
-    try {
-      return Integer.parseInt(string);
-    } catch(final NumberFormatException e) {
-      throw new XMLException(node, "Could not parse '" + string + "' as an int", e);
-    }
+  protected void configure() {
+    final ParserBinder parsers = new ParserBinder(this.binder());
+    parsers.bindParser(Byte.class).to(ByteParser.class);
+    parsers.bindParser(Double.class).to(DoubleParser.class);
+    parsers.bindParser(Float.class).to(FloatParser.class);
+    parsers.bindParser(Integer.class).to(IntegerParser.class);
+    parsers.bindParser(Long.class).to(LongParser.class);
+    parsers.bindParser(Short.class).to(ShortParser.class);
   }
 }

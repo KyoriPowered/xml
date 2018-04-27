@@ -27,9 +27,12 @@ import net.kyori.xml.XMLException;
 import net.kyori.xml.node.Node;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
+import javax.inject.Singleton;
+
 /**
  * Parses a {@link Node} into a {@link Long long}.
  */
+@Singleton
 public class LongParser implements NumberParser<Long> {
   @Override
   public @NonNull Long throwingParse(final @NonNull Node node, final @NonNull String string) throws XMLException {

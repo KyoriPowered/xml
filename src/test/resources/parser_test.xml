@@ -30,4 +30,11 @@
       <p>17212</p>
     </short>
   </np>
+  <enum>
+    <enum>a</enum>
+    <enum>foo bar</enum>
+    <enum>FOO BAR</enum>
+    <enum>FOO_BAR</enum>
+  </enum>
+  <string>foo bar watermelon</string>
 </test>

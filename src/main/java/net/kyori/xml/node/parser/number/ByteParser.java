@@ -27,9 +27,12 @@ import net.kyori.xml.XMLException;
 import net.kyori.xml.node.Node;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
+import javax.inject.Singleton;
+
 /**
  * Parses a {@link Node} into a {@link Byte byte}.
  */
+@Singleton
 public class ByteParser implements NumberParser<Byte> {
   @Override
   public @NonNull Byte throwingParse(final @NonNull Node node, final @NonNull String string) throws XMLException {

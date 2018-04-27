@@ -35,6 +35,7 @@ public interface NodeStreamElement<T> {
   /**
    * Gets an empty node stream element.
    *
+   * @param <T> the type
    * @return a node stream element
    */
   static <T> @NonNull NodeStreamElement<T> empty() {
