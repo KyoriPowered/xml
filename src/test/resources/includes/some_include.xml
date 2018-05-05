@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <root>
-  <things abc="def" ghi="jkl">
-    <thing abc="fed"/>
+  <things>
+    <thing/>
   </things>
+  <include src="other_include.xml"/>
 </root>
