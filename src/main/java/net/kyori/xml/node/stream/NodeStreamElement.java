@@ -27,6 +27,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public interface NodeStreamElement<T> {
@@ -68,5 +69,14 @@ public interface NodeStreamElement<T> {
    */
   default <R> @NonNull NodeStreamElement<R> map(final @NonNull Function<? super T, ? extends R> mapper) {
     return () -> this.want().map(mapper);
+  }
+
+  /**
+   * If a value is present, invoke the specified consumer with the value, otherwise do nothing.
+   *
+   * @param consumer block to be executed if a value is present
+   */
+  default void ifPresent(final Consumer<? super T> consumer) {
+    this.want().ifPresent(consumer);
   }
 }
