@@ -35,11 +35,21 @@ import javax.inject.Singleton;
 @Singleton
 public class ByteParser implements NumberParser<Byte> {
   @Override
-  public @NonNull Byte throwingParse(final @NonNull Node node, final @NonNull String string) throws XMLException {
+  public @NonNull Byte negativeInfinity(final @NonNull Node node, final @NonNull String string) {
+    return Byte.MIN_VALUE;
+  }
+
+  @Override
+  public @NonNull Byte finite(final @NonNull Node node, final @NonNull String string) throws XMLException {
     try {
       return Byte.parseByte(string);
     } catch(final NumberFormatException e) {
       throw new XMLException(node, "Could not parse '" + string + "' as a byte", e);
     }
+  }
+
+  @Override
+  public @NonNull Byte positiveInfinity(final @NonNull Node node, final @NonNull String string) {
+    return Byte.MAX_VALUE;
   }
 }

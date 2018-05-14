@@ -35,11 +35,21 @@ import javax.inject.Singleton;
 @Singleton
 public class IntegerParser implements NumberParser<Integer> {
   @Override
-  public @NonNull Integer throwingParse(final @NonNull Node node, final @NonNull String string) throws XMLException {
+  public @NonNull Integer negativeInfinity(final @NonNull Node node, final @NonNull String string) {
+    return Integer.MIN_VALUE;
+  }
+
+  @Override
+  public @NonNull Integer finite(final @NonNull Node node, final @NonNull String string) throws XMLException {
     try {
       return Integer.parseInt(string);
     } catch(final NumberFormatException e) {
       throw new XMLException(node, "Could not parse '" + string + "' as an int", e);
     }
+  }
+
+  @Override
+  public @NonNull Integer positiveInfinity(final @NonNull Node node, final @NonNull String string) {
+    return Integer.MAX_VALUE;
   }
 }

@@ -35,11 +35,21 @@ import javax.inject.Singleton;
 @Singleton
 public class DoubleParser implements NumberParser<Double> {
   @Override
-  public @NonNull Double throwingParse(final @NonNull Node node, final @NonNull String string) throws XMLException {
+  public @NonNull Double negativeInfinity(final @NonNull Node node, final @NonNull String string) {
+    return Double.NEGATIVE_INFINITY;
+  }
+
+  @Override
+  public @NonNull Double finite(final @NonNull Node node, final @NonNull String string) throws XMLException {
     try {
       return Double.parseDouble(string);
     } catch(final NumberFormatException e) {
       throw new XMLException(node, "Could not parse '" + string + "' as a double", e);
     }
+  }
+
+  @Override
+  public @NonNull Double positiveInfinity(final @NonNull Node node, final @NonNull String string) {
+    return Double.POSITIVE_INFINITY;
   }
 }

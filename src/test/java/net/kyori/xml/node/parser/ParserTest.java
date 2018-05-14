@@ -23,6 +23,7 @@
  */
 package net.kyori.xml.node.parser;
 
+import com.google.common.collect.Range;
 import com.google.inject.Guice;
 import com.google.inject.TypeLiteral;
 import net.kyori.violet.AbstractModule;
@@ -58,36 +59,6 @@ class ParserTest {
   }
 
   @Test
-  void testBoolean() {
-    this.npTest("boolean", new BooleanParser(), value -> assertEquals(false, value), value -> assertEquals(true, value));
-  }
-
-  @Test
-  void testInjectedBoolean() {
-    this.npTest("boolean", this.parsers().booleanParser, value -> assertEquals(false, value), value -> assertEquals(true, value));
-  }
-
-  @Test
-  void testByte() {
-    this.npTest("byte", new ByteParser(), value -> assertEquals(-1, (byte) value), value -> assertEquals(2, (byte) value));
-  }
-
-  @Test
-  void testInjectedByte() {
-    this.npTest("byte", this.parsers().byteParser, value -> assertEquals(-1, (byte) value), value -> assertEquals(2, (byte) value));
-  }
-
-  @Test
-  void testDouble() {
-    this.npTest("double", new DoubleParser(), value -> assertEquals(-64.024399791242338265d, (double) value), value -> assertEquals(64.28541278239204515d, (double) value));
-  }
-
-  @Test
-  void testInjectedDouble() {
-    this.npTest("double", this.parsers().doubleParser, value -> assertEquals(-64.024399791242338265d, (double) value), value -> assertEquals(64.28541278239204515d, (double) value));
-  }
-
-  @Test
   void testEnum() {
     this.testEnum(new EnumParser<>(Thing.class));
     this.testEnum(new EnumParser<>(TypeLiteral.get(Thing.class)));
@@ -112,43 +83,87 @@ class ParserTest {
   }
 
   @Test
+  void testBoolean() {
+    this.npTest("boolean", new BooleanParser(), value -> assertEquals(false, value), value -> assertEquals(true, value));
+  }
+
+  @Test
+  void testInjectedBoolean() {
+    this.npTest("boolean", this.parsers().booleanParser, value -> assertEquals(false, value), value -> assertEquals(true, value));
+  }
+
+  @Test
+  void testByte() {
+    this.npiTest("byte", new ByteParser(), value -> assertEquals(-1, (byte) value), Byte.MIN_VALUE, value -> assertEquals(2, (byte) value), Byte.MAX_VALUE);
+  }
+
+  @Test
+  void testInjectedByte() {
+    this.npiTest("byte", this.parsers().byteParser, value -> assertEquals(-1, (byte) value), Byte.MIN_VALUE, value -> assertEquals(2, (byte) value), Byte.MAX_VALUE);
+  }
+
+  @Test
+  void testDouble() {
+    this.npiTest("double", new DoubleParser(), value -> assertEquals(-64.024399791242338265d, (double) value), Double.NEGATIVE_INFINITY, value -> assertEquals(64.28541278239204515d, (double) value), Double.POSITIVE_INFINITY);
+  }
+
+  @Test
+  void testInjectedDouble() {
+    this.npiTest("double", this.parsers().doubleParser, value -> assertEquals(-64.024399791242338265d, (double) value), Double.NEGATIVE_INFINITY, value -> assertEquals(64.28541278239204515d, (double) value), Double.POSITIVE_INFINITY);
+  }
+
+  @Test
   void testFloat() {
-    this.npTest("float", new FloatParser(), value -> assertEquals(-64.5677465f, (float) value), value -> assertEquals(64.21948814f, (float) value));
+    this.npiTest("float", new FloatParser(), value -> assertEquals(-64.5677465f, (float) value), Float.NEGATIVE_INFINITY, value -> assertEquals(64.21948814f, (float) value), Float.POSITIVE_INFINITY);
   }
 
   @Test
   void testInjectedFloat() {
-    this.npTest("float", this.parsers().floatParser, value -> assertEquals(-64.5677465f, (float) value), value -> assertEquals(64.21948814f, (float) value));
+    this.npiTest("float", this.parsers().floatParser, value -> assertEquals(-64.5677465f, (float) value), Float.NEGATIVE_INFINITY, value -> assertEquals(64.21948814f, (float) value), Float.POSITIVE_INFINITY);
   }
 
   @Test
   void testInt() {
-    this.npTest("int", new IntegerParser(), value -> assertEquals(-1644266465, (float) value), value -> assertEquals(533695713, (float) value));
+    this.npiTest("int", new IntegerParser(), value -> assertEquals(-1644266465, (int) value), Integer.MIN_VALUE, value -> assertEquals(533695713, (int) value), Integer.MAX_VALUE);
   }
 
   @Test
   void testInjectedInt() {
-    this.npTest("int", this.parsers().integerParser, value -> assertEquals(-1644266465, (float) value), value -> assertEquals(533695713, (float) value));
+    this.npiTest("int", this.parsers().integerParser, value -> assertEquals(-1644266465, (int) value), Integer.MIN_VALUE, value -> assertEquals(533695713, (int) value), Integer.MAX_VALUE);
   }
 
   @Test
   void testLong() {
-    this.npTest("long", new LongParser(), value -> assertEquals(-2122657314852929763L, (long) value), value -> assertEquals(4370982310787917920L, (long) value));
+    this.npiTest("long", new LongParser(), value -> assertEquals(-2122657314852929763L, (long) value), Long.MIN_VALUE, value -> assertEquals(4370982310787917920L, (long) value), Long.MAX_VALUE);
   }
 
   @Test
   void testInjectedLong() {
-    this.npTest("long", this.parsers().longParser, value -> assertEquals(-2122657314852929763L, (long) value), value -> assertEquals(4370982310787917920L, (long) value));
+    this.npiTest("long", this.parsers().longParser, value -> assertEquals(-2122657314852929763L, (long) value), Long.MIN_VALUE, value -> assertEquals(4370982310787917920L, (long) value), Long.MAX_VALUE);
   }
 
   @Test
   void testShort() {
-    this.npTest("short", new ShortParser(), value -> assertEquals(-21738, (short) value), value -> assertEquals(17212, (short) value));
+    this.npiTest("short", new ShortParser(), value -> assertEquals(-21738, (short) value), Short.MIN_VALUE, value -> assertEquals(17212, (short) value), Short.MAX_VALUE);
   }
 
   @Test
   void testInjectedShort() {
-    this.npTest("short", this.parsers().shortParser, value -> assertEquals(-21738, (short) value), value -> assertEquals(17212, (short) value));
+    this.npiTest("short", this.parsers().shortParser, value -> assertEquals(-21738, (short) value), Short.MIN_VALUE, value -> assertEquals(17212, (short) value), Short.MAX_VALUE);
+  }
+
+  @Test
+  void testRange() {
+    final RangeParser<Integer> parser = new RangeParser<>(new IntegerParser());
+    this.rangeTest("open", parser, range -> assertEquals(Range.open(1, 10), range));
+    this.rangeTest("closed", parser, range -> assertEquals(Range.closed(1, 10), range));
+    this.rangeTest("openClosed", parser, range -> assertEquals(Range.openClosed(1, 10), range));
+    this.rangeTest("closedOpen", parser, range -> assertEquals(Range.closedOpen(1, 10), range));
+    this.rangeTest("greaterThan", parser, range -> assertEquals(Range.greaterThan(10), range));
+    this.rangeTest("lessThan", parser, range -> assertEquals(Range.lessThan(10), range));
+    this.rangeTest("atMost", parser, range -> assertEquals(Range.atMost(10), range));
+    this.rangeTest("all", parser, range -> assertEquals(Range.all(), range));
+    this.rangeTest("singleton", parser, range -> assertEquals(Range.singleton(10), range));
   }
 
   @Test
@@ -194,6 +209,23 @@ class ParserTest {
         .map(parser)
         .need()
     );
+  }
+
+  private <T> void npiTest(final String type, final Parser<T> parser, final Consumer<T> negative, final T negativeInfinity, final Consumer<T> positive, final T positiveInfinity) {
+    this.npTest(type, parser, negative, positive);
+    assertEquals(negativeInfinity, this.root.elements("npi").flatMap(Node::elements).named("ni1").one().map(parser).need());
+    assertEquals(negativeInfinity, this.root.elements("npi").flatMap(Node::elements).named("ni2").one().map(parser).need());
+    assertEquals(positiveInfinity, this.root.elements("npi").flatMap(Node::elements).named("pi1").one().map(parser).need());
+    assertEquals(positiveInfinity, this.root.elements("npi").flatMap(Node::elements).named("pi2").one().map(parser).need());
+  }
+
+  private <T> void rangeTest(final String type, final Parser<T> parser, final Consumer<T> consumer) {
+    this.root.elements("range")
+      .flatMap(Node::elements)
+      .named(type)
+      .flatMap(Node::elements)
+      .map(parser)
+      .forEach(consumer);
   }
 
   private enum Thing {

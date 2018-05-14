@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <test>
+  <enum>
+    <enum>a</enum>
+    <enum>foo bar</enum>
+    <enum>FOO BAR</enum>
+    <enum>FOO_BAR</enum>
+  </enum>
   <np>
     <boolean>
       <n>false</n>
@@ -30,11 +36,56 @@
       <p>17212</p>
     </short>
   </np>
-  <enum>
-    <enum>a</enum>
-    <enum>foo bar</enum>
-    <enum>FOO BAR</enum>
-    <enum>FOO_BAR</enum>
-  </enum>
+  <npi>
+    <ni1>-oo</ni1>
+    <ni2>-∞</ni2>
+    <pi1>+oo</pi1>
+    <pi2>+∞</pi2>
+  </npi>
+  <range>
+    <open>
+      <b>(1‥10)</b>
+      <a>(1..10)</a>
+    </open>
+    <closed>
+      <b>[1‥10]</b>
+      <a>[1..10]</a>
+    </closed>
+    <openClosed>
+      <b>(1‥10]</b>
+      <a>(1..10]</a>
+    </openClosed>
+    <closedOpen>
+      <b>[1‥10)</b>
+      <a>[1..10)</a>
+    </closedOpen>
+    <greaterThan>
+      <a>(10‥+∞)</a>
+      <b>(10..+oo)</b>
+      <c>(10‥+∞)</c>
+      <d>(10..+oo)</d>
+    </greaterThan>
+    <lessThan>
+      <a>(-∞‥10)</a>
+      <b>(-oo..10)</b>
+      <c>(-∞‥10)</c>
+      <d>(-oo..10)</d>
+    </lessThan>
+    <atMost>
+      <a>(-∞‥10]</a>
+      <b>(-oo..10]</b>
+      <c>(-∞‥10]</c>
+      <d>(-oo..10]</d>
+    </atMost>
+    <all>
+      <a>(-∞‥+∞)</a>
+      <b>(-oo..+oo)</b>
+      <c>(-∞‥+∞)</c>
+      <d>(-oo..+oo)</d>
+    </all>
+    <singleton>
+      <a>10</a>
+    </singleton>
+  </range>
   <string>foo bar watermelon</string>
 </test>

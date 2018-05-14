@@ -35,11 +35,21 @@ import javax.inject.Singleton;
 @Singleton
 public class ShortParser implements NumberParser<Short> {
   @Override
-  public @NonNull Short throwingParse(final @NonNull Node node, final @NonNull String string) throws XMLException {
+  public @NonNull Short negativeInfinity(final @NonNull Node node, final @NonNull String string) {
+    return Short.MIN_VALUE;
+  }
+
+  @Override
+  public @NonNull Short finite(final @NonNull Node node, final @NonNull String string) throws XMLException {
     try {
       return Short.parseShort(string);
     } catch(final NumberFormatException e) {
       throw new XMLException(node, "Could not parse '" + string + "' as a short", e);
     }
+  }
+
+  @Override
+  public @NonNull Short positiveInfinity(final @NonNull Node node, final @NonNull String string) {
+    return Short.MAX_VALUE;
   }
 }

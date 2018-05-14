@@ -23,8 +23,10 @@
  */
 package net.kyori.xml.node.parser.number;
 
+import net.kyori.xml.XMLException;
 import net.kyori.xml.node.Node;
 import net.kyori.xml.node.parser.PrimitiveParser;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Parses a {@link Node} into a number of type {@code T}.
@@ -32,4 +34,47 @@ import net.kyori.xml.node.parser.PrimitiveParser;
  * @param <T> the parsed number type
  */
 public interface NumberParser<T extends Number> extends PrimitiveParser<T> {
+  @Override
+  default @NonNull T throwingParse(final @NonNull Node node, final @NonNull String string) throws XMLException {
+    switch(string) {
+      case "-∞":
+      case "-oo":
+        return this.negativeInfinity(node, string);
+      default:
+        return this.finite(node, string);
+      case "+∞":
+      case "+oo":
+        return this.positiveInfinity(node, string);
+    }
+  }
+
+  /**
+   * Parses a {@link Node}'s {@link Node#value() value} into {@code T}'s negative infinity.
+   *
+   * @param node the node
+   * @param string the node value
+   * @return the parsed value
+   * @throws XMLException if an exception occurred while parsing
+   */
+  @NonNull T negativeInfinity(final @NonNull Node node, final @NonNull String string) throws XMLException;
+
+  /**
+   * Parses a {@link Node}'s {@link Node#value() value} into a finite {@code T}.
+   *
+   * @param node the node
+   * @param string the node value
+   * @return the parsed value
+   * @throws XMLException if an exception occurred while parsing
+   */
+  @NonNull T finite(final @NonNull Node node, final @NonNull String string) throws XMLException;
+
+  /**
+   * Parses a {@link Node}'s {@link Node#value() value} into {@code T}'s positive infinity.
+   *
+   * @param node the node
+   * @param string the node value
+   * @return the parsed value
+   * @throws XMLException if an exception occurred while parsing
+   */
+  @NonNull T positiveInfinity(final @NonNull Node node, final @NonNull String string) throws XMLException;
 }

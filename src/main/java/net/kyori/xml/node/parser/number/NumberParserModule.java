@@ -23,8 +23,10 @@
  */
 package net.kyori.xml.node.parser.number;
 
+import com.google.inject.TypeLiteral;
 import net.kyori.violet.AbstractModule;
 import net.kyori.xml.node.parser.ParserBinder;
+import net.kyori.xml.node.parser.RangeParser;
 
 /**
  * A module that binds parsers for numbers.
@@ -33,11 +35,29 @@ public final class NumberParserModule extends AbstractModule {
   @Override
   protected void configure() {
     final ParserBinder parsers = new ParserBinder(this.binder());
+
+    // normal
     parsers.bindParser(Byte.class).to(ByteParser.class);
     parsers.bindParser(Double.class).to(DoubleParser.class);
     parsers.bindParser(Float.class).to(FloatParser.class);
     parsers.bindParser(Integer.class).to(IntegerParser.class);
     parsers.bindParser(Long.class).to(LongParser.class);
     parsers.bindParser(Short.class).to(ShortParser.class);
+
+    // primitive
+    parsers.bindPrimitiveParser(Byte.class).to(ByteParser.class);
+    parsers.bindPrimitiveParser(Double.class).to(DoubleParser.class);
+    parsers.bindPrimitiveParser(Float.class).to(FloatParser.class);
+    parsers.bindPrimitiveParser(Integer.class).to(IntegerParser.class);
+    parsers.bindPrimitiveParser(Long.class).to(LongParser.class);
+    parsers.bindPrimitiveParser(Short.class).to(ShortParser.class);
+
+    // range
+    parsers.bindRangeParser(Byte.class).to(new TypeLiteral<RangeParser<Byte>>() {});
+    parsers.bindRangeParser(Double.class).to(new TypeLiteral<RangeParser<Double>>() {});
+    parsers.bindRangeParser(Float.class).to(new TypeLiteral<RangeParser<Float>>() {});
+    parsers.bindRangeParser(Integer.class).to(new TypeLiteral<RangeParser<Integer>>() {});
+    parsers.bindRangeParser(Long.class).to(new TypeLiteral<RangeParser<Long>>() {});
+    parsers.bindRangeParser(Short.class).to(new TypeLiteral<RangeParser<Short>>() {});
   }
 }

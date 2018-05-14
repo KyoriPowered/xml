@@ -39,7 +39,7 @@ public interface PrimitiveParser<T> extends Parser<T> {
   }
 
   /**
-   * Parses a a {@link Node}'s {@link Node#value() value} into {@code T}.
+   * Parses a {@link Node}'s {@link Node#value() value} into {@code T}.
    *
    * @param node the node
    * @param string the node value

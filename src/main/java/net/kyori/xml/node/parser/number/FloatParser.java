@@ -35,11 +35,21 @@ import javax.inject.Singleton;
 @Singleton
 public class FloatParser implements NumberParser<Float> {
   @Override
-  public @NonNull Float throwingParse(final @NonNull Node node, final @NonNull String string) throws XMLException {
+  public @NonNull Float negativeInfinity(final @NonNull Node node, final @NonNull String string) {
+    return Float.NEGATIVE_INFINITY;
+  }
+
+  @Override
+  public @NonNull Float finite(final @NonNull Node node, final @NonNull String string) throws XMLException {
     try {
       return Float.parseFloat(string);
     } catch(final NumberFormatException e) {
       throw new XMLException(node, "Could not parse '" + string + "' as a float", e);
     }
+  }
+
+  @Override
+  public @NonNull Float positiveInfinity(final @NonNull Node node, final @NonNull String string) {
+    return Float.POSITIVE_INFINITY;
   }
 }

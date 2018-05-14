@@ -35,11 +35,21 @@ import javax.inject.Singleton;
 @Singleton
 public class LongParser implements NumberParser<Long> {
   @Override
-  public @NonNull Long throwingParse(final @NonNull Node node, final @NonNull String string) throws XMLException {
+  public @NonNull Long negativeInfinity(final @NonNull Node node, final @NonNull String string) {
+    return Long.MIN_VALUE;
+  }
+
+  @Override
+  public @NonNull Long finite(final @NonNull Node node, final @NonNull String string) throws XMLException {
     try {
       return Long.parseLong(string);
     } catch(final NumberFormatException e) {
       throw new XMLException(node, "Could not parse '" + string + "' as a long", e);
     }
+  }
+
+  @Override
+  public @NonNull Long positiveInfinity(final @NonNull Node node, final @NonNull String string) {
+    return Long.MAX_VALUE;
   }
 }
