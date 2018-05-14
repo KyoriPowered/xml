@@ -44,44 +44,40 @@
   </npi>
   <range>
     <open>
-      <b>(1‥10)</b>
-      <a>(1..10)</a>
+      <a>(1‥10)</a>
+      <b>(1..10)</b>
     </open>
     <closed>
-      <b>[1‥10]</b>
-      <a>[1..10]</a>
+      <a>[1‥10]</a>
+      <b>[1..10]</b>
     </closed>
     <openClosed>
-      <b>(1‥10]</b>
-      <a>(1..10]</a>
+      <a>(1‥10]</a>
+      <b>(1..10]</b>
     </openClosed>
     <closedOpen>
-      <b>[1‥10)</b>
-      <a>[1..10)</a>
+      <a>[1‥10)</a>
+      <b>[1..10)</b>
     </closedOpen>
     <greaterThan>
       <a>(10‥+∞)</a>
       <b>(10..+oo)</b>
-      <c>(10‥+∞)</c>
-      <d>(10..+oo)</d>
     </greaterThan>
     <lessThan>
       <a>(-∞‥10)</a>
       <b>(-oo..10)</b>
-      <c>(-∞‥10)</c>
-      <d>(-oo..10)</d>
     </lessThan>
+    <atLeast>
+      <a>[10‥+∞)</a>
+      <b>[10..+oo)</b>
+    </atLeast>
     <atMost>
       <a>(-∞‥10]</a>
       <b>(-oo..10]</b>
-      <c>(-∞‥10]</c>
-      <d>(-oo..10]</d>
     </atMost>
     <all>
       <a>(-∞‥+∞)</a>
       <b>(-oo..+oo)</b>
-      <c>(-∞‥+∞)</c>
-      <d>(-oo..+oo)</d>
     </all>
     <singleton>
       <a>10</a>

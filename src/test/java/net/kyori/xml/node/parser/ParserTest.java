@@ -161,6 +161,7 @@ class ParserTest {
     this.rangeTest("closedOpen", parser, range -> assertEquals(Range.closedOpen(1, 10), range));
     this.rangeTest("greaterThan", parser, range -> assertEquals(Range.greaterThan(10), range));
     this.rangeTest("lessThan", parser, range -> assertEquals(Range.lessThan(10), range));
+    this.rangeTest("atLeast", parser, range -> assertEquals(Range.atLeast(10), range));
     this.rangeTest("atMost", parser, range -> assertEquals(Range.atMost(10), range));
     this.rangeTest("all", parser, range -> assertEquals(Range.all(), range));
     this.rangeTest("singleton", parser, range -> assertEquals(Range.singleton(10), range));
