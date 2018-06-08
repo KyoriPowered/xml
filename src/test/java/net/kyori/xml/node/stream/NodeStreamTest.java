@@ -75,7 +75,7 @@ class NodeStreamTest {
         .named("b")
         .one()
         .map(Node::value)
-        .want()
+        .optional()
         .orElse(null)
     );
   }
@@ -92,7 +92,7 @@ class NodeStreamTest {
         .named("b")
         .one()
         .map(Node::value)
-        .need()
+        .required()
     );
   }
 
@@ -108,7 +108,7 @@ class NodeStreamTest {
         .named("c")
         .one()
         .map(Node::value)
-        .need()
+        .required()
     );
   }
 

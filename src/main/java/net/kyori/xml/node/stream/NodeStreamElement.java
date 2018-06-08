@@ -48,15 +48,25 @@ public interface NodeStreamElement<T> {
    *
    * @return an optional
    */
-  @NonNull Optional<T> want();
+  @NonNull Optional<T> optional();
+
+  /**
+   * Gets {@code T}, or {@code defaultValue}.
+   *
+   * @param defaultValue the default value
+   * @return {@code T}
+   */
+  default /* @Nullable */ T optional(final /* @Nullable */ T defaultValue) {
+    return this.optional().orElse(defaultValue);
+  }
 
   /**
    * Gets {@code T}.
    *
    * @return {@code T}
    */
-  default @NonNull T need() {
-    return this.want().orElseThrow(NoSuchElementException::new);
+  default @NonNull T required() {
+    return this.optional().orElseThrow(NoSuchElementException::new);
   }
 
   /**
@@ -68,7 +78,7 @@ public interface NodeStreamElement<T> {
    * @return a new stream element
    */
   default <R> @NonNull NodeStreamElement<R> map(final @NonNull Function<? super T, ? extends R> mapper) {
-    return () -> this.want().map(mapper);
+    return () -> this.optional().map(mapper);
   }
 
   /**
@@ -77,6 +87,6 @@ public interface NodeStreamElement<T> {
    * @param consumer block to be executed if a value is present
    */
   default void ifPresent(final Consumer<? super T> consumer) {
-    this.want().ifPresent(consumer);
+    this.optional().ifPresent(consumer);
   }
 }

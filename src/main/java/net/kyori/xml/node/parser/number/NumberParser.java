@@ -34,16 +34,25 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  * @param <T> the parsed number type
  */
 public interface NumberParser<T extends Number> extends PrimitiveParser<T> {
+  String INFINITY_SYMBOL_A = "∞";
+  String INFINITY_SYMBOL_B = "oo";
+  // Negative
+  String NEGATIVE_INFINITY_SYMBOL_A = '-' + INFINITY_SYMBOL_A;
+  String NEGATIVE_INFINITY_SYMBOL_B = '-' + INFINITY_SYMBOL_B;
+  // Positive
+  String POSITIVE_INFINITY_SYMBOL_A = '+' + INFINITY_SYMBOL_A;
+  String POSITIVE_INFINITY_SYMBOL_B = '+' + INFINITY_SYMBOL_B;
+
   @Override
   default @NonNull T throwingParse(final @NonNull Node node, final @NonNull String string) throws XMLException {
     switch(string) {
-      case "-∞":
-      case "-oo":
+      case NEGATIVE_INFINITY_SYMBOL_A:
+      case NEGATIVE_INFINITY_SYMBOL_B:
         return this.negativeInfinity(node, string);
       default:
         return this.finite(node, string);
-      case "+∞":
-      case "+oo":
+      case POSITIVE_INFINITY_SYMBOL_A:
+      case POSITIVE_INFINITY_SYMBOL_B:
         return this.positiveInfinity(node, string);
     }
   }

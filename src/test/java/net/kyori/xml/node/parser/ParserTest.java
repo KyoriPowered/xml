@@ -169,12 +169,12 @@ class ParserTest {
 
   @Test
   void testString() {
-    assertEquals("foo bar watermelon", this.root.elements("string").one().map(new StringParser()).need());
+    assertEquals("foo bar watermelon", this.root.elements("string").one().map(new StringParser()).required());
   }
 
   @Test
   void testInjectedString() {
-    assertEquals("foo bar watermelon", this.root.elements("string").one().map(this.parsers().stringParser).need());
+    assertEquals("foo bar watermelon", this.root.elements("string").one().map(this.parsers().stringParser).required());
   }
 
   private Parsers parsers() {
@@ -198,7 +198,7 @@ class ParserTest {
         .named("n")
         .one()
         .map(parser)
-        .need()
+        .required()
     );
     positive.accept(
       this.root.elements("np")
@@ -208,16 +208,16 @@ class ParserTest {
         .named("p")
         .one()
         .map(parser)
-        .need()
+        .required()
     );
   }
 
   private <T> void npiTest(final String type, final Parser<T> parser, final Consumer<T> negative, final T negativeInfinity, final Consumer<T> positive, final T positiveInfinity) {
     this.npTest(type, parser, negative, positive);
-    assertEquals(negativeInfinity, this.root.elements("npi").flatMap(Node::elements).named("ni1").one().map(parser).need());
-    assertEquals(negativeInfinity, this.root.elements("npi").flatMap(Node::elements).named("ni2").one().map(parser).need());
-    assertEquals(positiveInfinity, this.root.elements("npi").flatMap(Node::elements).named("pi1").one().map(parser).need());
-    assertEquals(positiveInfinity, this.root.elements("npi").flatMap(Node::elements).named("pi2").one().map(parser).need());
+    assertEquals(negativeInfinity, this.root.elements("npi").flatMap(Node::elements).named("ni1").one().map(parser).required());
+    assertEquals(negativeInfinity, this.root.elements("npi").flatMap(Node::elements).named("ni2").one().map(parser).required());
+    assertEquals(positiveInfinity, this.root.elements("npi").flatMap(Node::elements).named("pi1").one().map(parser).required());
+    assertEquals(positiveInfinity, this.root.elements("npi").flatMap(Node::elements).named("pi2").one().map(parser).required());
   }
 
   private <T> void rangeTest(final String type, final Parser<T> parser, final Consumer<T> consumer) {

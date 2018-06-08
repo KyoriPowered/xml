@@ -27,6 +27,7 @@ import com.google.common.collect.BoundType;
 import com.google.common.collect.Range;
 import net.kyori.xml.XMLException;
 import net.kyori.xml.node.Node;
+import net.kyori.xml.node.parser.number.NumberParser;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.regex.Matcher;
@@ -35,7 +36,7 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 public class RangeParser<C extends Comparable<C>> implements PrimitiveParser<Range<C>> {
-  private static final Pattern PATTERN = Pattern.compile("([(|\\[])((?:\\d+\\.?\\d*?|-∞|-oo))?(?:\\.{2}|‥)((?:\\d+\\.?\\d*?|\\+∞|\\+oo))?([)|\\]])");
+  private static final Pattern PATTERN = Pattern.compile("([(|\\[])((?:\\d+\\.?\\d*?|" + NumberParser.NEGATIVE_INFINITY_SYMBOL_A + '|' + NumberParser.NEGATIVE_INFINITY_SYMBOL_B + "))?(?:\\.{2}|‥)((?:\\d+\\.?\\d*?|\\" + NumberParser.POSITIVE_INFINITY_SYMBOL_A + "|\\" + NumberParser.POSITIVE_INFINITY_SYMBOL_B + "))?([)|\\]])");
   private final PrimitiveParser<C> parser;
 
   @Inject
@@ -74,13 +75,13 @@ public class RangeParser<C extends Comparable<C>> implements PrimitiveParser<Ran
 
   private C parse(final Node node, final String string) throws XMLException {
     switch(string) {
-      case "-∞":
-      case "-oo":
+      case NumberParser.NEGATIVE_INFINITY_SYMBOL_A:
+      case NumberParser.NEGATIVE_INFINITY_SYMBOL_B:
         return null;
       default:
         return this.parser.throwingParse(node, string);
-      case "+∞":
-      case "+oo":
+      case NumberParser.POSITIVE_INFINITY_SYMBOL_A:
+      case NumberParser.POSITIVE_INFINITY_SYMBOL_B:
         return null;
     }
   }
