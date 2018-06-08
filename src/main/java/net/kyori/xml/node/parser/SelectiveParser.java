@@ -31,7 +31,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  *
  * @param <T> the parsed type
  */
-public interface FilteredParser<T> extends Parser<T> {
+public interface SelectiveParser<T> extends Parser<T> {
   /**
    * Tests if {@code node} is parseable.
    *
