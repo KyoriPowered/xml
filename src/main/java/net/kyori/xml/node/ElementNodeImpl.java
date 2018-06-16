@@ -23,12 +23,16 @@
  */
 package net.kyori.xml.node;
 
+import net.kyori.lunar.EvenMoreObjects;
+import net.kyori.xml.XMLException;
 import net.kyori.xml.node.stream.NodeStream;
+import net.kyori.xml.node.stream.NodeStreamElement;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jdom2.Element;
 
 import java.util.Collection;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -45,8 +49,20 @@ final class ElementNodeImpl implements ElementNode {
   }
 
   @Override
-  public @NonNull Optional<Node> attribute(final @NonNull String name) {
-    return Optional.ofNullable(this.element.getAttribute(name)).map(Node::of);
+  public @NonNull NodeStreamElement<Node> attribute(final @NonNull String name) {
+    final Optional<Node> node = Optional.ofNullable(this.element.getAttribute(name)).map(Node::of);
+    return new NodeStreamElement<Node>() {
+      @Override
+      public @NonNull Optional<Node> optional() {
+        return node;
+      }
+
+      @Override
+      public @NonNull Node required() {
+        final XMLException exception = new XMLException(ElementNodeImpl.this, "missing required attribute '" + name + '\'');
+        return this.optional().orElseThrow(() -> EvenMoreObjects.make(new NoSuchElementException(exception.getMessage()), e -> e.initCause(exception)));
+      }
+    };
   }
 
   @Override

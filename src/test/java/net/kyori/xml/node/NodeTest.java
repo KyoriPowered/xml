@@ -33,10 +33,12 @@ import org.junit.jupiter.api.TestInstance;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class NodeTest {
@@ -55,11 +57,19 @@ class NodeTest {
 
   @Test
   void testValues() {
-    assertEquals("okay", this.root.attribute("potato").map(Node::value).orElse(null));
+    assertEquals("okay", this.root.attribute("potato").map(Node::value).optional(null));
     assertEquals("test", this.root.elements("name").collect(MoreCollectors.onlyElement()).value());
     assertEquals("100", this.root.elements("some-number").collect(MoreCollectors.onlyElement()).value());
     assertEquals(Arrays.asList("bar", "baz"), this.root.elements("nested")
       .flatMap(node -> node.elements("foo")).map(Node::value).collect(Collectors.toList()));
+  }
+
+  @Test
+  void testOptionalAttribute() {
+    final NoSuchElementException exception = assertThrows(NoSuchElementException.class, () -> this.root.attribute("foo").required());
+    assertEquals("missing required attribute 'foo'", exception.getMessage());
+    final Throwable cause = exception.getCause();
+    assertTrue(cause instanceof XMLException);
   }
 
   @Test

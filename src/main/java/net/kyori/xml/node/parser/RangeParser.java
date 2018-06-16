@@ -29,6 +29,7 @@ import net.kyori.xml.XMLException;
 import net.kyori.xml.node.Node;
 import net.kyori.xml.node.parser.number.NumberParser;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -73,7 +74,7 @@ public class RangeParser<C extends Comparable<C>> implements PrimitiveParser<Ran
     }
   }
 
-  private C parse(final Node node, final String string) throws XMLException {
+  private @Nullable C parse(final Node node, final String string) throws XMLException {
     switch(string) {
       case NumberParser.NEGATIVE_INFINITY_SYMBOL_A:
       case NumberParser.NEGATIVE_INFINITY_SYMBOL_B:

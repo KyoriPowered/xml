@@ -24,11 +24,11 @@
 package net.kyori.xml.node;
 
 import net.kyori.xml.node.stream.NodeStream;
+import net.kyori.xml.node.stream.NodeStreamElement;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jdom2.Attribute;
 
 import java.util.Collection;
-import java.util.Optional;
 
 /**
  * A node around an {@link Attribute attribute}.
@@ -62,8 +62,8 @@ public interface AttributeNode extends Node {
    */
 
   @Override
-  default @NonNull Optional<Node> attribute(final @NonNull String name) {
-    return Optional.empty();
+  default @NonNull NodeStreamElement<Node> attribute(final @NonNull String name) {
+    return NodeStreamElement.empty();
   }
 
   @Override

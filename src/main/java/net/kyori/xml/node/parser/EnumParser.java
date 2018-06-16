@@ -37,7 +37,7 @@ import javax.inject.Inject;
 /**
  * Parses a {@link Node} into an enum constant.
  */
-public class EnumParser<E extends Enum<E>> implements Parser<E> {
+public class EnumParser<E extends Enum<E>> implements PrimitiveParser<E> {
   private final TypeLiteral<E> type;
   private final Map<String, E> map = new HashMap<>();
 
@@ -55,11 +55,11 @@ public class EnumParser<E extends Enum<E>> implements Parser<E> {
   }
 
   @Override
-  public E throwingParse(final Node node) throws XMLException {
-    /* @Nullable */ final E constant = this.map.get(node.value().toLowerCase(Locale.ENGLISH).replace(' ', '_'));
+  public @NonNull E throwingParse(final @NonNull Node node, final @NonNull String string) throws XMLException {
+    final /* @Nullable */ E constant = this.map.get(string.toLowerCase(Locale.ENGLISH).replace(' ', '_'));
     if(constant != null) {
       return constant;
     }
-    throw new XMLException(node, "Could not find " + this.type.getRawType().getName() + " with name '" + node.value() + '\'');
+    throw new XMLException(node, "Could not find " + this.type.getRawType().getName() + " with name '" + string + '\'');
   }
 }

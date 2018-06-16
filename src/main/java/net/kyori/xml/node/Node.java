@@ -26,6 +26,7 @@ package net.kyori.xml.node;
 import com.google.common.collect.ImmutableSet;
 import net.kyori.xml.XMLException;
 import net.kyori.xml.node.stream.NodeStream;
+import net.kyori.xml.node.stream.NodeStreamElement;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jdom2.Attribute;
@@ -142,7 +143,7 @@ public interface Node {
    * @param name the name
    * @return the attribute
    */
-  @NonNull Optional<Node> attribute(final @NonNull String name);
+  @NonNull NodeStreamElement<Node> attribute(final @NonNull String name);
 
   /**
    * Gets a required attribute by its name.
@@ -152,7 +153,7 @@ public interface Node {
    * @throws XMLException if the attribute is not available
    */
   default @NonNull Node requireAttribute(final @NonNull String name) throws XMLException {
-    return this.attribute(name).orElseThrow(() -> new XMLException(this, "missing required attribute '" + name + '\''));
+    return this.attribute(name).optional().orElseThrow(() -> new XMLException(this, "missing required attribute '" + name + '\''));
   }
 
   /**
