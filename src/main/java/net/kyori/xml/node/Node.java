@@ -99,6 +99,17 @@ public interface Node {
   @NonNull String normalizedValue();
 
   /**
+   * Gets a single node by its name.
+   *
+   * @param name the name
+   * @return the node
+   * @throws IllegalArgumentException if more than one node named {@code name} is found
+   */
+  default @NonNull NodeStreamElement<Node> node(final @NonNull String name) {
+    return this.nodes(name).one();
+  }
+
+  /**
    * Creates a stream of nodes from the attributes and children elements of this node.
    *
    * @return the node stream
@@ -180,6 +191,17 @@ public interface Node {
    * @return the attribute node stream
    */
   @NonNull NodeStream attributes(final @NonNull Collection<String> names);
+
+  /**
+   * Gets a single element node by its name.
+   *
+   * @param name the name
+   * @return the node
+   * @throws IllegalArgumentException if more than one element named {@code name} is found
+   */
+  default @NonNull NodeStreamElement<Node> element(final @NonNull String name) {
+    return this.elements(name).one();
+  }
 
   /**
    * Creates a stream of nodes from the children elements of this node.
