@@ -21,37 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.node.flattener;
+package net.kyori.xml.node.parser;
 
-import net.kyori.xml.node.Node;
-import net.kyori.xml.node.filter.NodeFilter;
-import net.kyori.xml.node.stream.NodeStream;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import net.kyori.xml.XMLException;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
-import java.util.Arrays;
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-/**
- * A flattener which follows a path of node names.
- */
-public class PathNodeFlattener extends NodeFlattener.Impl {
-  private final @NonNull NodeFilter filter;
-  private final @NonNull List<String> path;
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class EnumParserTest {
+  private static final AbstractParserTest<Thing> THING = new AbstractParserTest<>(new EnumParser<>(Thing.class));
+  private static final AbstractParserTest<Another> ANOTHER = new AbstractParserTest<>(new EnumParser<>(Another.class));
 
-  public PathNodeFlattener(final @NonNull NodeFilter filter, final @NonNull String... path) {
-    this(filter, Arrays.asList(path));
+  @Test
+  void testParse() {
+    THING.assertParse(Thing.FOO_BAR, "FOO_BAR");
+    THING.assertParse(Thing.FOO_BAR, "FOO BAR");
+    THING.assertParse(Thing.FOO_BAR, "foo bar");
+    THING.assertParse(Thing.FOO_BAR, "foo_bar");
+
+    assertThrows(XMLException.class, () -> ANOTHER.assertParse(Another.FOO_BAR, "FOO_BAR"));
+    assertThrows(XMLException.class, () -> ANOTHER.assertParse(Another.FOO_BAR, "FOO BAR"));
+    assertThrows(XMLException.class, () -> ANOTHER.assertParse(Another.FOO_BAR, "foo bar"));
+    ANOTHER.assertParse(Another.FOO_BAR, "foo_bar");
   }
 
-  public PathNodeFlattener(final @NonNull NodeFilter filter, final @NonNull List<String> path) {
-    this.filter = filter;
-    this.path = path;
+  public enum Thing {
+    FOO_BAR;
   }
 
-  @Override
-  public @NonNull NodeStream flatten(final @NonNull Node node, final int depth) {
-    if(this.path.size() > depth && this.filter.test(node, depth)) {
-      return node.nodes(this.path.get(depth)).flatMap(that -> this.flatten(that, depth + 1));
-    }
-    return NodeStream.of(this.node(node, depth));
+  public enum Another {
+    @EnumParser.Names("foo_bar")
+    FOO_BAR;
   }
 }

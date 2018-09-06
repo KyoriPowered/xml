@@ -23,10 +23,10 @@
  */
 package net.kyori.xml.node.parser;
 
-import net.kyori.lunar.exception.Exceptions;
+import net.kyori.lambda.Maybe;
+import net.kyori.lambda.function.ThrowingSupplier;
 import net.kyori.xml.XMLException;
 import net.kyori.xml.node.Node;
-import net.kyori.xml.node.stream.NodeStream;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.Optional;
@@ -54,8 +54,7 @@ public interface Parser<T> extends Function<Node, T> {
    * @param node the node
    * @return the parsed value
    */
-  @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-  default @NonNull Optional<T> parse(final @NonNull Optional<Node> node) {
+  default @NonNull Maybe<T> parse(final @NonNull Maybe<Node> node) {
     return node.map(this::parse);
   }
 
@@ -65,27 +64,9 @@ public interface Parser<T> extends Function<Node, T> {
    * @param node the node
    * @return the parsed value
    */
-  default @NonNull T parse(final @NonNull Node node) {
-    return Exceptions.getOrRethrow(() -> this.throwingParse(node));
-  }
-
-  /**
-   * Parses a {@link Node} into {@code T}.
-   *
-   * @param node the node
-   * @return the parsed value
-   * @throws XMLException if an exception occurred while parsing
-   */
-  @NonNull T throwingParse(final @NonNull Node node) throws XMLException;
-
-  /**
-   * Parses a stream of {@link Node} into a stream of {@code T}.
-   *
-   * @param stream the node stream
-   * @return the parsed value
-   */
-  default @NonNull Stream<T> parse(final @NonNull NodeStream stream) {
-    return this.parse(stream.stream());
+  @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+  default @NonNull Optional<T> parse(final @NonNull Optional<Node> node) {
+    return node.map(this::parse);
   }
 
   /**
@@ -97,4 +78,23 @@ public interface Parser<T> extends Function<Node, T> {
   default @NonNull Stream<T> parse(final @NonNull Stream<Node> stream) {
     return stream.map(this::parse);
   }
+
+  /**
+   * Parses a {@link Node} into {@code T}.
+   *
+   * @param node the node
+   * @return the parsed value
+   */
+  default @NonNull T parse(final @NonNull Node node) {
+    return ThrowingSupplier.get(() -> this.throwingParse(node));
+  }
+
+  /**
+   * Parses a {@link Node} into {@code T}.
+   *
+   * @param node the node
+   * @return the parsed value
+   * @throws XMLException if an exception occurred while parsing
+   */
+  @NonNull T throwingParse(final @NonNull Node node) throws XMLException;
 }

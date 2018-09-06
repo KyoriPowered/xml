@@ -27,11 +27,6 @@ import net.kyori.xml.XMLException;
 import net.kyori.xml.node.Node;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-/**
- * Parses a {@link Node}'s {@link Node#value() value} into {@code T}.
- *
- * @param <T> the parsed type
- */
 public interface PrimitiveParser<T> extends Parser<T> {
   @Override
   default @NonNull T throwingParse(final @NonNull Node node) throws XMLException {

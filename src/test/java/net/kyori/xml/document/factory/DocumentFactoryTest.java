@@ -23,7 +23,7 @@
  */
 package net.kyori.xml.document.factory;
 
-import net.kyori.lunar.EvenMoreObjects;
+import net.kyori.lambda.Composer;
 import net.kyori.xml.XMLException;
 import net.kyori.xml.node.Node;
 import org.jdom2.Document;
@@ -41,14 +41,14 @@ class DocumentFactoryTest {
   @Test
   void test() throws URISyntaxException, XMLException {
     final DocumentFactory factory = DocumentFactory.builder()
-      .builder(EvenMoreObjects.make(new SAXBuilder(), builder -> builder.setJDOMFactory(new LocatedJDOMFactory())))
+      .builder(Composer.accept(new SAXBuilder(), builder -> builder.setJDOMFactory(new LocatedJDOMFactory())))
       .includePaths(path("/includes"))
       .build();
     final Document document = factory.read(path("/include_test.xml"));
     final Node node = Node.of(document.getRootElement());
-    assertEquals(3, node.nodes().stream().count());
-    assertEquals(1, node.nodes("things").stream().count());
-    assertEquals(2, node.nodes("thingy").stream().count());
+    assertEquals(3, node.nodes().count());
+    assertEquals(1, node.nodes("things").count());
+    assertEquals(2, node.nodes("thingy").count());
   }
 
   private static Path path(final String path) throws URISyntaxException {

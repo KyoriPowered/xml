@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<test a-attribute="foo" b-attribute="bar">
+  <a-element>baz</a-element>
+  <b-element/>
+  <b-element/>
+  <c-element/>
+</test>

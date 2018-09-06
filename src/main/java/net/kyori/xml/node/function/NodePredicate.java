@@ -21,33 +21,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.node.parser;
+package net.kyori.xml.node.function;
 
 import net.kyori.xml.node.Node;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import javax.inject.Singleton;
+import java.util.function.Predicate;
 
 /**
- * Parses a {@link Node} into a {@link String string}.
+ * A predicate which accepts a node and depth.
  */
-@Singleton
-public class StringParser implements PrimitiveParser<String> {
-  private static final StringParser INSTANCE = new StringParser();
+@FunctionalInterface
+public interface NodePredicate extends Predicate<Node> {
+  @Override
+  default boolean test(final @NonNull Node node) {
+    return this.test(node, 0);
+  }
 
   /**
-   * Gets the parser.
+   * Tests.
    *
-   * @return the parser
-   * @deprecated prefer injection
+   * @param node the node
+   * @param depth the depth
+   * @return a stream of nodes
    */
-  @Deprecated
-  public static @NonNull StringParser get() {
-    return INSTANCE;
+  boolean test(final @NonNull Node node, final int depth);
+
+  @Override
+  default @NonNull NodePredicate and(final @NonNull Predicate<? super Node> other) {
+    return (node, depth) -> this.test(node, depth) && test(other, node, depth);
   }
 
   @Override
-  public @NonNull String throwingParse(final @NonNull Node node, final @NonNull String string) {
-    return string;
+  default @NonNull NodePredicate or(final @NonNull Predicate<? super Node> other) {
+    return (node, depth) -> this.test(node, depth) || test(other, node, depth);
+  }
+
+  static boolean test(final @NonNull Predicate<? super Node> predicate, final @NonNull Node node, final int depth) {
+    return predicate instanceof NodePredicate ? ((NodePredicate) predicate).test(node, depth) : predicate.test(node);
   }
 }

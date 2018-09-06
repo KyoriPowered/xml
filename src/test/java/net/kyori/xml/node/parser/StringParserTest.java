@@ -23,20 +23,17 @@
  */
 package net.kyori.xml.node.parser;
 
-import net.kyori.xml.node.Node;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
-/**
- * Parses a {@link Node} into {@code T} if {@link #parseable(Node)} returns {@code true}.
- *
- * @param <T> the parsed type
- */
-public interface SelectiveParser<T> extends Parser<T> {
-  /**
-   * Tests if {@code node} is parseable.
-   *
-   * @param node the node
-   * @return {@code true} if the node is parseable, {@code false} otherwise
-   */
-  boolean parseable(final @NonNull Node node);
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class StringParserTest extends AbstractParserTest<String> {
+  StringParserTest() {
+    super(StringParser.get());
+  }
+
+  @Test
+  void testParse() {
+    this.assertParse("foo", "foo");
+  }
 }

@@ -23,10 +23,8 @@
  */
 package net.kyori.xml.node.parser.number;
 
-import com.google.inject.TypeLiteral;
 import net.kyori.violet.AbstractModule;
 import net.kyori.xml.node.parser.ParserBinder;
-import net.kyori.xml.node.parser.RangeParser;
 
 /**
  * A module that binds parsers for numbers.
@@ -37,27 +35,19 @@ public final class NumberParserModule extends AbstractModule {
     final ParserBinder parsers = new ParserBinder(this.binder());
 
     // normal
-    parsers.bindParser(Byte.class).to(ByteParser.class);
-    parsers.bindParser(Double.class).to(DoubleParser.class);
-    parsers.bindParser(Float.class).to(FloatParser.class);
-    parsers.bindParser(Integer.class).to(IntegerParser.class);
-    parsers.bindParser(Long.class).to(LongParser.class);
-    parsers.bindParser(Short.class).to(ShortParser.class);
+    parsers.bind(Byte.class).toInstance(ByteParser.get());
+    parsers.bind(Double.class).toInstance(DoubleParser.get());
+    parsers.bind(Float.class).toInstance(FloatParser.get());
+    parsers.bind(Integer.class).toInstance(IntParser.get());
+    parsers.bind(Long.class).toInstance(LongParser.get());
+    parsers.bind(Short.class).toInstance(ShortParser.get());
 
     // primitive
-    parsers.bindPrimitiveParser(Byte.class).to(ByteParser.class);
-    parsers.bindPrimitiveParser(Double.class).to(DoubleParser.class);
-    parsers.bindPrimitiveParser(Float.class).to(FloatParser.class);
-    parsers.bindPrimitiveParser(Integer.class).to(IntegerParser.class);
-    parsers.bindPrimitiveParser(Long.class).to(LongParser.class);
-    parsers.bindPrimitiveParser(Short.class).to(ShortParser.class);
-
-    // range
-    parsers.bindRangeParser(Byte.class).to(new TypeLiteral<RangeParser<Byte>>() {});
-    parsers.bindRangeParser(Double.class).to(new TypeLiteral<RangeParser<Double>>() {});
-    parsers.bindRangeParser(Float.class).to(new TypeLiteral<RangeParser<Float>>() {});
-    parsers.bindRangeParser(Integer.class).to(new TypeLiteral<RangeParser<Integer>>() {});
-    parsers.bindRangeParser(Long.class).to(new TypeLiteral<RangeParser<Long>>() {});
-    parsers.bindRangeParser(Short.class).to(new TypeLiteral<RangeParser<Short>>() {});
+    parsers.bindPrimitive(Byte.class).toInstance(ByteParser.get());
+    parsers.bindPrimitive(Double.class).toInstance(DoubleParser.get());
+    parsers.bindPrimitive(Float.class).toInstance(FloatParser.get());
+    parsers.bindPrimitive(Integer.class).toInstance(IntParser.get());
+    parsers.bindPrimitive(Long.class).toInstance(LongParser.get());
+    parsers.bindPrimitive(Short.class).toInstance(ShortParser.get());
   }
 }

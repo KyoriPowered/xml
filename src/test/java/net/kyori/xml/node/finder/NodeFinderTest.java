@@ -21,33 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.node.parser;
+package net.kyori.xml.node.finder;
 
+import net.kyori.lambda.Maybe;
+import net.kyori.xml.Testing;
 import net.kyori.xml.node.Node;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jdom2.JDOMException;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
-import javax.inject.Singleton;
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
-/**
- * Parses a {@link Node} into a {@link String string}.
- */
-@Singleton
-public class StringParser implements PrimitiveParser<String> {
-  private static final StringParser INSTANCE = new StringParser();
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-  /**
-   * Gets the parser.
-   *
-   * @return the parser
-   * @deprecated prefer injection
-   */
-  @Deprecated
-  public static @NonNull StringParser get() {
-    return INSTANCE;
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class NodeFinderTest {
+  private Node root;
+
+  @BeforeAll
+  void init() throws IOException, JDOMException {
+    this.root = Testing.read("/node/finder_test.xml");
   }
 
-  @Override
-  public @NonNull String throwingParse(final @NonNull Node node, final @NonNull String string) {
-    return string;
+  @Test
+  void testBranchLeaf() {
+    final NodeFinder finder = new BranchLeafNodeFinder("things", "thing");
+    final List<Node> nodes = finder.nodes(this.root.elements().collect(Maybe.collector()).get()).collect(Collectors.toList());
+    assertEquals(2, nodes.size());
+    nodes.forEach(node -> assertEquals("thing", node.name()));
   }
 }

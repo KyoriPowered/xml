@@ -21,33 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.node.parser;
+package net.kyori.xml.node.finder;
 
 import net.kyori.xml.node.Node;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import javax.inject.Singleton;
+import java.util.stream.Stream;
 
 /**
- * Parses a {@link Node} into a {@link String string}.
+ * Finds nodes, with depth.
  */
-@Singleton
-public class StringParser implements PrimitiveParser<String> {
-  private static final StringParser INSTANCE = new StringParser();
+@FunctionalInterface
+public interface NodeDepthFinder extends NodeFinder {
+  @Override
+  default @NonNull Stream<Node> nodes(final @NonNull Node parent) {
+    return this.nodes(parent, 0);
+  }
 
   /**
-   * Gets the parser.
+   * Finds nodes.
    *
-   * @return the parser
-   * @deprecated prefer injection
+   * @param parent the parent node
+   * @param depth the depth
+   * @return a stream of nodes
    */
-  @Deprecated
-  public static @NonNull StringParser get() {
-    return INSTANCE;
-  }
-
-  @Override
-  public @NonNull String throwingParse(final @NonNull Node node, final @NonNull String string) {
-    return string;
-  }
+  @NonNull Stream<Node> nodes(final @NonNull Node parent, final int depth);
 }

@@ -23,58 +23,33 @@
  */
 package net.kyori.xml.node;
 
-import com.google.common.collect.ImmutableSet;
-import net.kyori.xml.XMLException;
-import net.kyori.xml.node.stream.NodeStream;
-import net.kyori.xml.node.stream.NodeStreamElement;
+import net.kyori.lambda.Maybe;
+import net.kyori.lambda.collection.MoreSets;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
-import org.jdom2.Attribute;
-import org.jdom2.Element;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Optional;
+import java.util.stream.Stream;
 
 public interface Node {
   /**
    * Creates a node from an attribute.
    *
    * @param attribute the attribute
-   * @return the node
+   * @return a node
    */
-  static @NonNull AttributeNode of(final @NonNull Attribute attribute) {
-    return new AttributeNodeImpl(attribute);
-  }
-
-  /**
-   * Creates a node from an attribute.
-   *
-   * @param attribute the attribute
-   * @return the node
-   */
-  static @NonNull Optional<AttributeNode> maybeOf(final @Nullable Attribute attribute) {
-    return attribute != null ? Optional.of(new AttributeNodeImpl(attribute)) : Optional.empty();
+  static @NonNull Node of(final org.jdom2.@NonNull Attribute attribute) {
+    return AttributeNode.of(attribute);
   }
 
   /**
    * Creates a node from an element.
    *
    * @param element the element
-   * @return the node
+   * @return a node
    */
-  static @NonNull ElementNode of(final @NonNull Element element) {
-    return new ElementNodeImpl(element);
-  }
-
-  /**
-   * Creates a node from an element.
-   *
-   * @param element the element
-   * @return the node
-   */
-  static @NonNull Optional<ElementNode> maybeOf(final @Nullable Element element) {
-    return element != null ? Optional.of(new ElementNodeImpl(element)) : Optional.empty();
+  static @NonNull Node of(final org.jdom2.@NonNull Element element) {
+    return ElementNode.of(element);
   }
 
   /**
@@ -92,11 +67,43 @@ public interface Node {
   @NonNull String value();
 
   /**
-   * Gets the normalized value of this node.
+   * Creates a stream of nodes from the attributes and children elements of this node.
    *
-   * @return the normalized value
+   * @return a stream of nodes
    */
-  @NonNull String normalizedValue();
+  default @NonNull Stream<Node> nodes() {
+    return Stream.concat(this.attributes(), this.elements());
+  }
+
+  /**
+   * Creates a stream of nodes from the attributes and children elements of this node matching a name.
+   *
+   * @param name the name
+   * @return a stream of nodes
+   */
+  default @NonNull Stream<Node> nodes(final @NonNull String name) {
+    return this.nodes(Collections.singleton(name));
+  }
+
+  /**
+   * Creates a stream of nodes from the attributes and children elements of this node matching a set of names.
+   *
+   * @param names the names
+   * @return a stream of nodes
+   */
+  default @NonNull Stream<Node> nodes(final @NonNull String... names) {
+    return this.nodes(MoreSets.of(names));
+  }
+
+  /**
+   * Creates a stream of nodes from the attributes and children elements of this node matching a set of names.
+   *
+   * @param names the names
+   * @return a stream of nodes
+   */
+  default @NonNull Stream<Node> nodes(final @NonNull Collection<String> names) {
+    return Stream.concat(this.attributes(names), this.elements(names));
+  }
 
   /**
    * Gets a single node by its name.
@@ -105,92 +112,44 @@ public interface Node {
    * @return the node
    * @throws IllegalArgumentException if more than one node named {@code name} is found
    */
-  default @NonNull NodeStreamElement<Node> node(final @NonNull String name) {
-    return this.nodes(name).one();
+  default @NonNull Maybe<Node> node(final @NonNull String name) {
+    return this.nodes(name).collect(Maybe.collector());
   }
 
   /**
-   * Creates a stream of nodes from the attributes and children elements of this node.
+   * Creates a stream of nodes from the children elements of this node.
    *
-   * @return the node stream
+   * @return a stream of nodes
    */
-  default @NonNull NodeStream nodes() {
-    return NodeStream.concat(this.attributes(), this.elements());
-  }
+  @NonNull Stream<Node> elements();
 
   /**
-   * Creates a stream of nodes from the attributes and children elements of this node matching a name.
+   * Creates a stream of nodes from the children elements of this node matching a name.
    *
    * @param name the name
-   * @return the node stream
+   * @return a stream of nodes
    */
-  default @NonNull NodeStream nodes(final @NonNull String name) {
-    return this.nodes(Collections.singleton(name));
+  default @NonNull Stream<Node> elements(final @NonNull String name) {
+    return this.elements(Collections.singleton(name));
   }
 
   /**
-   * Creates a stream of nodes from the attributes and children elements of this node matching a set of names.
+   * Creates a stream of nodes from the children elements of this node matching a set of names.
    *
    * @param names the names
-   * @return the node stream
+   * @return a stream of nodes
    */
-  default @NonNull NodeStream nodes(final @NonNull String... names) {
-    return this.nodes(ImmutableSet.copyOf(names));
+  default @NonNull Stream<Node> elements(final @NonNull String... names) {
+    return this.elements(MoreSets.of(names));
   }
 
   /**
-   * Creates a stream of nodes from the attributes and children elements of this node matching a set of names.
+   * Creates a stream of nodes from the children elements of this node matching a set of names.
    *
    * @param names the names
-   * @return the node stream
+   * @return a stream of nodes
    */
-  default @NonNull NodeStream nodes(final @NonNull Collection<String> names) {
-    return NodeStream.concat(this.attributes(names), this.elements(names));
-  }
-
-  /**
-   * Gets an attribute by its name.
-   *
-   * @param name the name
-   * @return the attribute
-   */
-  @NonNull NodeStreamElement<Node> attribute(final @NonNull String name);
-
-  /**
-   * Gets a required attribute by its name.
-   *
-   * @param name the name
-   * @return the attribute
-   * @throws XMLException if the attribute is not available
-   */
-  default @NonNull Node requireAttribute(final @NonNull String name) throws XMLException {
-    return this.attribute(name).optional().orElseThrow(() -> new XMLException(this, "missing required attribute '" + name + '\''));
-  }
-
-  /**
-   * Creates a stream of nodes from the attributes of this node.
-   *
-   * @return the attribute node stream
-   */
-  @NonNull NodeStream attributes();
-
-  /**
-   * Creates a stream of nodes from the attributes of this node matching a set of names.
-   *
-   * @param names the names
-   * @return the attribute node stream
-   */
-  default @NonNull NodeStream attributes(final @NonNull String... names) {
-    return this.attributes(ImmutableSet.copyOf(names));
-  }
-
-  /**
-   * Creates a stream of nodes from the attributes of this node matching a set of names.
-   *
-   * @param names the names
-   * @return the attribute node stream
-   */
-  @NonNull NodeStream attributes(final @NonNull Collection<String> names);
+  @NonNull Stream<Node> elements(final @NonNull Collection<String> names);
 
   /**
    * Gets a single element node by its name.
@@ -199,42 +158,43 @@ public interface Node {
    * @return the node
    * @throws IllegalArgumentException if more than one element named {@code name} is found
    */
-  default @NonNull NodeStreamElement<Node> element(final @NonNull String name) {
-    return this.elements(name).one();
+  default @NonNull Maybe<Node> element(final @NonNull String name) {
+    return this.elements(name).collect(Maybe.collector());
   }
 
   /**
-   * Creates a stream of nodes from the children elements of this node.
+   * Creates a stream of nodes from the attributes of this node.
    *
-   * @return the element node stream
+   * @return a stream of nodes
    */
-  @NonNull NodeStream elements();
+  @NonNull Stream<Node> attributes();
 
   /**
-   * Creates a stream of nodes from the children elements of this node matching a name.
+   * Creates a stream of nodes from the attributes of this node matching a set of names.
+   *
+   * @param names the names
+   * @return a stream of nodes
+   */
+  default @NonNull Stream<Node> attributes(final @NonNull String... names) {
+    return this.attributes(MoreSets.of(names));
+  }
+
+  /**
+   * Creates a stream of nodes from the attributes of this node matching a set of names.
+   *
+   * @param names the names
+   * @return a stream of nodes
+   */
+  @NonNull Stream<Node> attributes(final @NonNull Collection<String> names);
+
+  /**
+   * Gets a single attribute node by its name.
    *
    * @param name the name
-   * @return the element node stream
+   * @return the node
+   * @throws IllegalArgumentException if more than one attribute named {@code name} is found
    */
-  default @NonNull NodeStream elements(final @NonNull String name) {
-    return this.elements(Collections.singleton(name));
+  default @NonNull Maybe<Node> attribute(final @NonNull String name) {
+    return this.attributes(name).collect(Maybe.collector());
   }
-
-  /**
-   * Creates a stream of nodes from the children elements of this node matching a set of names.
-   *
-   * @param names the names
-   * @return the element node stream
-   */
-  default @NonNull NodeStream elements(final @NonNull String... names) {
-    return this.elements(ImmutableSet.copyOf(names));
-  }
-
-  /**
-   * Creates a stream of nodes from the children elements of this node matching a set of names.
-   *
-   * @param names the names
-   * @return the element node stream
-   */
-  @NonNull NodeStream elements(final @NonNull Collection<String> names);
 }

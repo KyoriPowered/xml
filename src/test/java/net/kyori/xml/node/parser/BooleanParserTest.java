@@ -21,48 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.node.flattener;
+package net.kyori.xml.node.parser;
 
-import com.google.common.collect.MoreCollectors;
-import net.kyori.xml.Testing;
-import net.kyori.xml.node.ElementNode;
-import net.kyori.xml.node.Node;
-import net.kyori.xml.node.filter.NodeFilters;
-import org.jdom2.JDOMException;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class NodeFlattenerTest {
-  private ElementNode root;
-
-  @BeforeAll
-  void init() throws IOException, JDOMException {
-    this.root = Testing.read("/flattener_test.xml");
+class BooleanParserTest extends AbstractParserTest<Boolean> {
+  BooleanParserTest() {
+    super(BooleanParser.get());
   }
 
   @Test
-  void testBranch() {
-    final NodeFlattener flattener = new BranchLeafNodeFlattener(NodeFilters.named("things"), NodeFilters.named("thing"));
-
-    final List<Node> nodes = flattener.flatten(this.root.elements().collect(MoreCollectors.onlyElement())).collect(Collectors.toList());
-    assertEquals(2, nodes.size());
-    nodes.forEach(node -> assertEquals("thing", node.name()));
+  void testFalseParse() {
+    this.assertParse(false, "false");
   }
 
   @Test
-  void testPath() {
-    final NodeFlattener flattener = new PathNodeFlattener(NodeFilters.alwaysTrue(), "things", "thing", "deeper", "child");
-
-    final List<Node> nodes = flattener.flatten(this.root).collect(Collectors.toList());
-    assertEquals(12, nodes.size());
-    nodes.forEach(node -> assertEquals("child", node.name()));
+  void testTrueParse() {
+    this.assertParse(true, "true");
   }
 }

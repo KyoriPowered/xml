@@ -21,42 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.node.filter;
+package net.kyori.xml.node.parser.number;
 
-import net.kyori.xml.node.Node;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
-/**
- * A filter which accepts a node and depth.
- */
-@FunctionalInterface
-public interface NodeFilter {
-  /**
-   * Tests if this filter allows {@code node} at a depth of {@code depth}.
-   *
-   * @param node the node
-   * @param depth the depth
-   * @return {@code true} if the filter allows the node
-   */
-  boolean test(final @NonNull Node node, final int depth);
-
-  /**
-   * Logical and with {@code this} with {@code that}.
-   *
-   * @param that the other node depth filter
-   * @return a node filter
-   */
-  default @NonNull NodeFilter and(final @NonNull NodeFilter that) {
-    return (node, depth) -> this.test(node, depth) && that.test(node, depth);
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class LongParserTest extends AbstractNumberParserTest<Long> {
+  LongParserTest() {
+    super(LongParser.get());
   }
 
-  /**
-   * Logical and with {@code this} with {@code that}.
-   *
-   * @param that the other node depth filter
-   * @return a node filter
-   */
-  default @NonNull NodeFilter or(final @NonNull NodeFilter that) {
-    return (node, depth) -> this.test(node, depth) || that.test(node, depth);
+  @Test
+  void testNegativeInfinityParse() {
+    this.assertNegativeInfinityParse(Long.MIN_VALUE);
+  }
+
+  @Test
+  void testNegativeParse() {
+    this.assertParse(-6280110368799927205L, "-6280110368799927205");
+    this.assertParse(-3140055184399963602L, "-3140055184399963602");
+  }
+
+  @Test
+  void testPositiveParse() {
+    this.assertParse(3140055184399963602L, "3140055184399963602");
+    this.assertParse(8568549957979054705L, "8568549957979054705");
+  }
+
+  @Test
+  void testPositiveInfinityParse() {
+    this.assertPositiveInfinityParse(Long.MAX_VALUE);
   }
 }

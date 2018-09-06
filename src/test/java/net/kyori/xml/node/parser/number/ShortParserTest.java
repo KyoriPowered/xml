@@ -21,33 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.node.parser;
+package net.kyori.xml.node.parser.number;
 
-import net.kyori.xml.node.Node;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
-import javax.inject.Singleton;
-
-/**
- * Parses a {@link Node} into a {@link String string}.
- */
-@Singleton
-public class StringParser implements PrimitiveParser<String> {
-  private static final StringParser INSTANCE = new StringParser();
-
-  /**
-   * Gets the parser.
-   *
-   * @return the parser
-   * @deprecated prefer injection
-   */
-  @Deprecated
-  public static @NonNull StringParser get() {
-    return INSTANCE;
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class ShortParserTest extends AbstractNumberParserTest<Short> {
+  ShortParserTest() {
+    super(ShortParser.get());
   }
 
-  @Override
-  public @NonNull String throwingParse(final @NonNull Node node, final @NonNull String string) {
-    return string;
+  @Test
+  void testNegativeInfinityParse() {
+    this.assertNegativeInfinityParse(Short.MIN_VALUE);
+  }
+
+  @Test
+  void testNegativeParse() {
+    this.assertParse((short) -16383, "-16383");
+    this.assertParse((short) -8191, "-8191");
+  }
+
+  @Test
+  void testPositiveParse() {
+    this.assertParse((short) 8191, "8191");
+    this.assertParse((short) 16383, "16383");
+  }
+
+  @Test
+  void testPositiveInfinityParse() {
+    this.assertPositiveInfinityParse(Short.MAX_VALUE);
   }
 }

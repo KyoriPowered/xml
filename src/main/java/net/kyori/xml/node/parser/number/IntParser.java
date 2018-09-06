@@ -30,10 +30,23 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import javax.inject.Singleton;
 
 /**
- * Parses a {@link Node} into an {@link Integer integer}.
+ * Parses a {@link Node} into an {@link Integer int}.
  */
 @Singleton
-public class IntegerParser implements NumberParser<Integer> {
+public class IntParser implements NumberParser<Integer> {
+  private static final IntParser INSTANCE = new IntParser();
+
+  /**
+   * Gets the parser.
+   *
+   * @return the parser
+   * @deprecated prefer injection
+   */
+  @Deprecated
+  public static @NonNull IntParser get() {
+    return INSTANCE;
+  }
+
   @Override
   public @NonNull Integer negativeInfinity(final @NonNull Node node, final @NonNull String string) {
     return Integer.MIN_VALUE;

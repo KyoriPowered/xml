@@ -34,6 +34,19 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class ByteParser implements NumberParser<Byte> {
+  private static final ByteParser INSTANCE = new ByteParser();
+
+  /**
+   * Gets the parser.
+   *
+   * @return the parser
+   * @deprecated prefer injection
+   */
+  @Deprecated
+  public static @NonNull ByteParser get() {
+    return INSTANCE;
+  }
+
   @Override
   public @NonNull Byte negativeInfinity(final @NonNull Node node, final @NonNull String string) {
     return Byte.MIN_VALUE;

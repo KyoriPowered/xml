@@ -21,45 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.node;
+package net.kyori.xml.node.finder;
 
+import net.kyori.xml.node.Node;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
-import org.jdom2.Attribute;
 
-import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
-final class AttributeNodeImpl implements AttributeNode {
-  private final @NonNull Attribute attribute;
-
-  AttributeNodeImpl(final @NonNull Attribute attribute) {
-    this.attribute = attribute;
-  }
-
+/**
+ * Finds nodes.
+ */
+@FunctionalInterface
+public interface NodeFinder extends Function<Node, Stream<Node>> {
+  /**
+   * @deprecated only exists to implement {@link Function}
+   */
+  @Deprecated
   @Override
-  public @NonNull Attribute attribute() {
-    return this.attribute;
+  default @NonNull Stream<Node> apply(final @NonNull Node node) {
+    return this.nodes(node);
   }
 
-  @Override
-  public boolean equals(final @Nullable Object other) {
-    if(this == other) {
-      return true;
-    }
-    if(other == null || this.getClass() != other.getClass()) {
-      return false;
-    }
-    final AttributeNodeImpl that = (AttributeNodeImpl) other;
-    return Objects.equals(this.attribute, that.attribute);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.attribute);
-  }
-
-  @Override
-  public String toString() {
-    return "AttributeNode{" + this.attribute.getName() + '}';
-  }
+  /**
+   * Finds nodes.
+   *
+   * @param parent the parent node
+   * @return a stream of nodes
+   */
+  @NonNull Stream<Node> nodes(final @NonNull Node parent);
 }

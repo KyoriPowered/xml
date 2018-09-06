@@ -34,6 +34,19 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class LongParser implements NumberParser<Long> {
+  private static final LongParser INSTANCE = new LongParser();
+
+  /**
+   * Gets the parser.
+   *
+   * @return the parser
+   * @deprecated prefer injection
+   */
+  @Deprecated
+  public static @NonNull LongParser get() {
+    return INSTANCE;
+  }
+
   @Override
   public @NonNull Long negativeInfinity(final @NonNull Node node, final @NonNull String string) {
     return Long.MIN_VALUE;

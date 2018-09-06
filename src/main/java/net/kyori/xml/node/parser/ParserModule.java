@@ -35,7 +35,7 @@ public final class ParserModule extends AbstractModule {
     this.install(new NumberParserModule());
 
     final ParserBinder parsers = new ParserBinder(this.binder());
-    parsers.bindParser(Boolean.class).to(BooleanParser.class);
-    parsers.bindParser(String.class).to(StringParser.class);
+    parsers.bind(Boolean.class).toInstance(BooleanParser.get());
+    parsers.bind(String.class).toInstance(StringParser.get());
   }
 }

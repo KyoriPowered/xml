@@ -21,36 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.element;
+package net.kyori.xml.node.parser;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.jdom2.Element;
-import org.jdom2.located.Located;
-import org.jdom2.located.LocatedElement;
+import static net.kyori.xml.Testing.element;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-/**
- * An alternative to {@link Element#clone()}.
- */
-public class ClonedElement extends LocatedElement {
-  public ClonedElement(final @NonNull Element that) {
-    super(that.getName(), that.getNamespace());
+public class AbstractParserTest<T> {
+  protected final Parser<T> parser;
 
-    // Element#clone() does not copy over the parent, but we do
-    this.setParent(that.getParent());
+  protected AbstractParserTest(final Parser<T> parser) {
+    this.parser = parser;
+  }
 
-    // The source element is not required to be located
-    if(that instanceof Located) {
-      this.setLine(((Located) that).getLine());
-      this.setColumn(((Located) that).getColumn());
-    }
+  protected final void assertParse(final T expected, final String string) {
+    assertEquals(expected, this.parse(string));
+  }
 
-    // Copy over additional namespaces
-    that.getAdditionalNamespaces().forEach(this::addNamespaceDeclaration);
-
-    // Copy over attributes
-    that.getAttributes().forEach(attribute -> this.setAttribute(attribute.clone()));
-
-    // Copy content
-    this.setContent(that.cloneContent());
+  private T parse(final String string) {
+    return this.parser.parse(element("memory", string));
   }
 }

@@ -21,33 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.node.parser;
+package net.kyori.xml.node.parser.number;
 
-import net.kyori.xml.node.Node;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import net.kyori.xml.node.parser.AbstractParserTest;
+import net.kyori.xml.node.parser.Parser;
 
-import javax.inject.Singleton;
-
-/**
- * Parses a {@link Node} into a {@link String string}.
- */
-@Singleton
-public class StringParser implements PrimitiveParser<String> {
-  private static final StringParser INSTANCE = new StringParser();
-
-  /**
-   * Gets the parser.
-   *
-   * @return the parser
-   * @deprecated prefer injection
-   */
-  @Deprecated
-  public static @NonNull StringParser get() {
-    return INSTANCE;
+abstract class AbstractNumberParserTest<T> extends AbstractParserTest<T> {
+  AbstractNumberParserTest(final Parser<T> parser) {
+    super(parser);
   }
 
-  @Override
-  public @NonNull String throwingParse(final @NonNull Node node, final @NonNull String string) {
-    return string;
+  final void assertNegativeInfinityParse(final T expected) {
+    this.assertParse(expected, NumberParser.NEGATIVE_INFINITY_SYMBOL_A);
+    this.assertParse(expected, NumberParser.NEGATIVE_INFINITY_SYMBOL_B);
+  }
+
+  final void assertPositiveInfinityParse(final T expected) {
+    this.assertParse(expected, NumberParser.POSITIVE_INFINITY_SYMBOL_A);
+    this.assertParse(expected, NumberParser.POSITIVE_INFINITY_SYMBOL_B);
   }
 }

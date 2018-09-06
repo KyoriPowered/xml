@@ -103,7 +103,7 @@ final class DocumentFactoryImpl implements DocumentFactory {
     }
 
     private List<Content> readInclude(final Element element) throws XMLException {
-      final Path src = Paths.get(Node.of(element).requireAttribute("src").value());
+      final Path src = Paths.get(Node.of(element).attribute("src").get().value());
       return this.readInclude(src, element);
     }
 
@@ -123,7 +123,7 @@ final class DocumentFactoryImpl implements DocumentFactory {
 
     private @Nullable Path findInclude(final Path include) {
       final List<Path> includePaths = new ArrayList<>(DocumentFactoryImpl.this.includePaths);
-      @Nullable Path basePath = this.path.getParent();
+      final @Nullable Path basePath = this.path.getParent();
       if(basePath != null) {
         includePaths.add(0, basePath);
       }

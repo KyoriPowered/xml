@@ -34,6 +34,19 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class FloatParser implements NumberParser<Float> {
+  private static final FloatParser INSTANCE = new FloatParser();
+
+  /**
+   * Gets the parser.
+   *
+   * @return the parser
+   * @deprecated prefer injection
+   */
+  @Deprecated
+  public static @NonNull FloatParser get() {
+    return INSTANCE;
+  }
+
   @Override
   public @NonNull Float negativeInfinity(final @NonNull Node node, final @NonNull String string) {
     return Float.NEGATIVE_INFINITY;

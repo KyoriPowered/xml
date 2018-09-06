@@ -21,17 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.element;
+package net.kyori.xml.node.parser.number;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.jdom2.Element;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
-/**
- * An element which inherits attributes from its parent element, if present.
- */
-public class InheritedElement extends ClonedElement {
-  public InheritedElement(final @NonNull Element that) {
-    super(that);
-    Elements.inherit(that.getParent(), this);
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class IntParserTest extends AbstractNumberParserTest<Integer> {
+  IntParserTest() {
+    super(IntParser.get());
+  }
+
+  @Test
+  void testNegativeInfinityParse() {
+    this.assertNegativeInfinityParse(Integer.MIN_VALUE);
+  }
+
+  @Test
+  void testNegativeParse() {
+    this.assertParse(-387455129, "-387455129");
+    this.assertParse(-193727564, "-193727564");
+  }
+
+  @Test
+  void testPositiveParse() {
+    this.assertParse(193727564, "193727564");
+    this.assertParse(563092907, "563092907");
+  }
+
+  @Test
+  void testPositiveInfinityParse() {
+    this.assertPositiveInfinityParse(Integer.MAX_VALUE);
   }
 }

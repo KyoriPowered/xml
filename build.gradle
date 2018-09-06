@@ -2,14 +2,18 @@ plugins {
   id 'java'
   id 'maven'
   id 'signing'
-  id 'net.minecrell.licenser' version '0.3'
+  id 'net.minecrell.licenser' version '0.4.1'
 }
 
 group 'net.kyori'
-version '1.0.0'
+version '2.0.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+
+test {
+  useJUnitPlatform()
+}
 
 license {
   header project.file('header.txt')
@@ -26,14 +30,15 @@ repositories {
 }
 
 dependencies {
-  compile 'com.google.guava:guava:21.0'
-  compile 'net.kyori:lunar:1.0.6-SNAPSHOT'
+  compile 'net.kyori:lambda:1.0.0-SNAPSHOT'
   compileOnly 'net.kyori:violet:1.0.0'
   compile 'org.checkerframework:checker-qual:2.4.0'
   compile 'org.jdom:jdom2:2.0.6'
   testCompileOnly 'net.kyori:violet:1.0.0'
-  testCompile 'org.junit.jupiter:junit-jupiter-api:5.1.0'
-  testCompile 'org.junit.jupiter:junit-jupiter-engine:5.1.0'
+  testCompile 'com.google.truth:truth:0.42'
+  testCompile 'com.google.truth.extensions:truth-java8-extension:0.42'
+  testCompile 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+  testCompile 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
 }
 
 task javadocJar(type: Jar) {

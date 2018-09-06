@@ -23,38 +23,22 @@
  */
 package net.kyori.xml.node;
 
-import net.kyori.xml.node.stream.NodeStream;
-import net.kyori.xml.node.stream.NodeStreamElement;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.jdom2.Attribute;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Collection;
+import java.util.Objects;
+import java.util.stream.Stream;
 
-/**
- * A node around an {@link Attribute attribute}.
- */
 public interface AttributeNode extends Node {
   /**
-   * Gets the attribute.
+   * Creates a node from an attribute.
    *
-   * @return the attribute
+   * @param attribute the attribute
+   * @return a node
    */
-  @NonNull Attribute attribute();
-
-  @Override
-  default @NonNull String name() {
-    return this.attribute().getName();
-  }
-
-  @Override
-  default @NonNull String value() {
-    return this.attribute().getValue();
-  }
-
-  // Attribute values don't need to be normalised.
-  @Override
-  default @NonNull String normalizedValue() {
-    return this.value();
+  static @NonNull Node of(final org.jdom2.@NonNull Attribute attribute) {
+    return new JDOMAttributeNode(attribute);
   }
 
   /*
@@ -62,27 +46,64 @@ public interface AttributeNode extends Node {
    */
 
   @Override
-  default @NonNull NodeStreamElement<Node> attribute(final @NonNull String name) {
-    return NodeStreamElement.empty();
+  default @NonNull Stream<Node> elements() {
+    return Stream.empty();
   }
 
   @Override
-  default @NonNull NodeStream attributes() {
-    return NodeStream.empty();
+  default @NonNull Stream<Node> elements(final @NonNull Collection<String> names) {
+    return Stream.empty();
   }
 
   @Override
-  default @NonNull NodeStream attributes(final @NonNull Collection<String> names) {
-    return NodeStream.empty();
+  default @NonNull Stream<Node> attributes() {
+    return Stream.empty();
   }
 
   @Override
-  default @NonNull NodeStream elements() {
-    return NodeStream.empty();
+  default @NonNull Stream<Node> attributes(final @NonNull Collection<String> names) {
+    return Stream.empty();
+  }
+}
+
+/* package */ abstract class AbstractAttributeNode<A> implements AttributeNode {
+  /* package */ final A attribute;
+
+  /* package */ AbstractAttributeNode(final @NonNull A attribute) {
+    this.attribute = attribute;
   }
 
   @Override
-  default @NonNull NodeStream elements(final @NonNull Collection<String> names) {
-    return NodeStream.empty();
+  public boolean equals(final @Nullable Object other) {
+    if(this == other) return true;
+    if(other == null || this.getClass() != other.getClass()) return false;
+    final AbstractAttributeNode that = (AbstractAttributeNode) other;
+    return Objects.equals(this.attribute, that.attribute);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(this.attribute);
+  }
+
+  @Override
+  public @NonNull String toString() {
+    return "AttributeNode{" + this.name() + '}';
+  }
+}
+
+/* package */ final class JDOMAttributeNode extends AbstractAttributeNode<org.jdom2.Attribute> implements AttributeNode {
+  /* package */ JDOMAttributeNode(final org.jdom2.@NonNull Attribute attribute) {
+    super(attribute);
+  }
+
+  @Override
+  public @NonNull String name() {
+    return this.attribute.getName();
+  }
+
+  @Override
+  public @NonNull String value() {
+    return this.attribute.getValue();
   }
 }

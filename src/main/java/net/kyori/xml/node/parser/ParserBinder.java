@@ -23,7 +23,6 @@
  */
 package net.kyori.xml.node.parser;
 
-import com.google.common.collect.Range;
 import com.google.inject.Binder;
 import com.google.inject.TypeLiteral;
 import com.google.inject.binder.AnnotatedBindingBuilder;
@@ -48,8 +47,8 @@ public class ParserBinder {
    * @param <T> the type
    * @return a binding builder
    */
-  public <T> @NonNull AnnotatedBindingBuilder<Parser<T>> bindParser(final @NonNull Class<T> type) {
-    return this.bindParser(TypeLiteral.get(type));
+  public <T> @NonNull AnnotatedBindingBuilder<Parser<T>> bind(final @NonNull Class<T> type) {
+    return this.bind(TypeLiteral.get(type));
   }
 
   /**
@@ -59,7 +58,7 @@ public class ParserBinder {
    * @param <T> the type
    * @return a binding builder
    */
-  public <T> @NonNull AnnotatedBindingBuilder<Parser<T>> bindParser(final @NonNull TypeLiteral<T> type) {
+  public <T> @NonNull AnnotatedBindingBuilder<Parser<T>> bind(final @NonNull TypeLiteral<T> type) {
     return this.binder.bind(new FriendlyTypeLiteral<Parser<T>>() {}.where(new TypeArgument<T>(type) {}));
   }
 
@@ -70,8 +69,8 @@ public class ParserBinder {
    * @param <T> the type
    * @return a binding builder
    */
-  public <T> @NonNull AnnotatedBindingBuilder<PrimitiveParser<T>> bindPrimitiveParser(final @NonNull Class<T> type) {
-    return this.bindPrimitiveParser(TypeLiteral.get(type));
+  public <T> @NonNull AnnotatedBindingBuilder<PrimitiveParser<T>> bindPrimitive(final @NonNull Class<T> type) {
+    return this.bindPrimitive(TypeLiteral.get(type));
   }
 
   /**
@@ -81,29 +80,7 @@ public class ParserBinder {
    * @param <T> the type
    * @return a binding builder
    */
-  public <T> @NonNull AnnotatedBindingBuilder<PrimitiveParser<T>> bindPrimitiveParser(final @NonNull TypeLiteral<T> type) {
+  public <T> @NonNull AnnotatedBindingBuilder<PrimitiveParser<T>> bindPrimitive(final @NonNull TypeLiteral<T> type) {
     return this.binder.bind(new FriendlyTypeLiteral<PrimitiveParser<T>>() {}.where(new TypeArgument<T>(type) {}));
-  }
-
-  /**
-   * Creates a binding builder for binding a range parser for {@code T}.
-   *
-   * @param type the type
-   * @param <T> the type
-   * @return a binding builder
-   */
-  public <T extends Comparable<T>> @NonNull AnnotatedBindingBuilder<Parser<Range<T>>> bindRangeParser(final @NonNull Class<T> type) {
-    return this.bindRangeParser(TypeLiteral.get(type));
-  }
-
-  /**
-   * Creates a binding builder for binding a range parser for {@code T}.
-   *
-   * @param type the type
-   * @param <T> the type
-   * @return a binding builder
-   */
-  public <T extends Comparable<T>> @NonNull AnnotatedBindingBuilder<Parser<Range<T>>> bindRangeParser(final @NonNull TypeLiteral<T> type) {
-    return this.binder.bind(new FriendlyTypeLiteral<Parser<Range<T>>>() {}.where(new TypeArgument<T>(type) {}));
   }
 }

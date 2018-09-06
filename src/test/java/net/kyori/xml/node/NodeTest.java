@@ -23,9 +23,7 @@
  */
 package net.kyori.xml.node;
 
-import com.google.common.collect.MoreCollectors;
 import net.kyori.xml.Testing;
-import net.kyori.xml.XMLException;
 import org.jdom2.JDOMException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -33,48 +31,61 @@ import org.junit.jupiter.api.TestInstance;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static com.google.common.truth.Truth8.assertThat;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class NodeTest {
-  private Node root;
+  private static final int EXPECTED_ATTRIBUTES = 2;
+  private static final int EXPECTED_ELEMENTS = 4;
+  private Node node;
 
   @BeforeAll
   void init() throws IOException, JDOMException {
-    this.root = Testing.read("/node_test.xml");
+    this.node = Testing.read("/node/test.xml");
   }
 
   @Test
-  void testFilter() {
-    assertEquals(3, this.root.elements().stream().count());
-    assertEquals(2, this.root.elements("name", "some-number").stream().count());
+  void testNodes() {
+    assertThat(this.node.nodes()).hasSize(EXPECTED_ATTRIBUTES + EXPECTED_ELEMENTS);
+    assertThat(this.node.nodes("a-attribute")).hasSize(1);
+    assertThat(this.node.nodes("b-element")).hasSize(2);
+    assertThat(this.node.nodes("a-element", "b-element")).hasSize(3);
+    assertThat(this.node.nodes(Arrays.asList("b-element", "c-element"))).hasSize(3);
   }
 
   @Test
-  void testValues() {
-    assertEquals("okay", this.root.attribute("potato").map(Node::value).optional(null));
-    assertEquals("test", this.root.elements("name").collect(MoreCollectors.onlyElement()).value());
-    assertEquals("100", this.root.elements("some-number").collect(MoreCollectors.onlyElement()).value());
-    assertEquals(Arrays.asList("bar", "baz"), this.root.elements("nested")
-      .flatMap(node -> node.elements("foo")).map(Node::value).collect(Collectors.toList()));
+  void testNode() {
+    assertThat(this.node.node("a-attribute").optional().map(Node::value)).hasValue("foo");
+    assertThat(this.node.node("a-element").optional().map(Node::value)).hasValue("baz");
+    assertThat(this.node.node("abc").optional().map(Node::value)).isEmpty();
   }
 
   @Test
-  void testOptionalAttribute() {
-    final NoSuchElementException exception = assertThrows(NoSuchElementException.class, () -> this.root.attribute("foo").required());
-    assertEquals("missing required attribute 'foo'", exception.getMessage());
-    final Throwable cause = exception.getCause();
-    assertTrue(cause instanceof XMLException);
+  void testElements() {
+    assertThat(this.node.elements()).hasSize(EXPECTED_ELEMENTS);
+    assertThat(this.node.elements("b-element")).hasSize(2);
+    assertThat(this.node.elements("a-element", "b-element")).hasSize(3);
+    assertThat(this.node.elements(Arrays.asList("a-element", "b-element"))).hasSize(3);
   }
 
   @Test
-  void testMissingAttribute() {
-    final XMLException exception = assertThrows(XMLException.class, () -> this.root.requireAttribute("nothing"));
-    assertEquals("missing required attribute 'nothing'", exception.getMessage());
+  void testElement() {
+    assertThat(this.node.element("a-element").optional().map(Node::value)).hasValue("baz");
+    assertThat(this.node.element("abc").optional().map(Node::value)).isEmpty();
+  }
+
+  @Test
+  void testAttributes() {
+    assertThat(this.node.attributes()).hasSize(EXPECTED_ATTRIBUTES);
+    assertThat(this.node.attributes("a-attribute")).hasSize(1);
+    assertThat(this.node.attributes("a-attribute", "b-attribute")).hasSize(2);
+    assertThat(this.node.attributes(Arrays.asList("a-attribute", "b-attribute"))).hasSize(2);
+  }
+
+  @Test
+  void testAttribute() {
+    assertThat(this.node.attribute("a-attribute").optional().map(Node::value)).hasValue("foo");
+    assertThat(this.node.attribute("abc").optional().map(Node::value)).isEmpty();
   }
 }

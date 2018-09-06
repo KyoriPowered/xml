@@ -34,6 +34,19 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class ShortParser implements NumberParser<Short> {
+  private static final ShortParser INSTANCE = new ShortParser();
+
+  /**
+   * Gets the parser.
+   *
+   * @return the parser
+   * @deprecated prefer injection
+   */
+  @Deprecated
+  public static @NonNull ShortParser get() {
+    return INSTANCE;
+  }
+
   @Override
   public @NonNull Short negativeInfinity(final @NonNull Node node, final @NonNull String string) {
     return Short.MIN_VALUE;

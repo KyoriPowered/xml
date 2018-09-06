@@ -34,6 +34,19 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class DoubleParser implements NumberParser<Double> {
+  private static final DoubleParser INSTANCE = new DoubleParser();
+
+  /**
+   * Gets the parser.
+   *
+   * @return the parser
+   * @deprecated prefer injection
+   */
+  @Deprecated
+  public static @NonNull DoubleParser get() {
+    return INSTANCE;
+  }
+
   @Override
   public @NonNull Double negativeInfinity(final @NonNull Node node, final @NonNull String string) {
     return Double.NEGATIVE_INFINITY;

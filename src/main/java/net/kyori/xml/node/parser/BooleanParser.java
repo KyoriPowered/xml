@@ -34,6 +34,19 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class BooleanParser implements PrimitiveParser<Boolean> {
+  private static final BooleanParser INSTANCE = new BooleanParser();
+
+  /**
+   * Gets the parser.
+   *
+   * @return the parser
+   * @deprecated prefer injection
+   */
+  @Deprecated
+  public static @NonNull BooleanParser get() {
+    return INSTANCE;
+  }
+
   @Override
   public @NonNull Boolean throwingParse(final @NonNull Node node, final @NonNull String string) throws XMLException {
     if(string.equals("true")) {

@@ -21,61 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.node.flattener;
+package net.kyori.xml.node.function;
 
-import net.kyori.xml.element.Elements;
 import net.kyori.xml.node.Node;
-import net.kyori.xml.node.stream.NodeStream;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import java.util.function.Function;
-import java.util.stream.Stream;
-
-/*
- * If the word "flattener" is in the scrabble dictionary then it is a word, IntelliJ.
- * https://www.wordgamedictionary.com/dictionary/word/flattener/
- */
+import java.util.function.UnaryOperator;
 
 /**
- * Takes a node and flattens it into a stream of nodes, similar to
- * a {@link Stream#flatMap flatMap} operation on a {@link Stream}.
+ * A function that accepts a node and depth.
  */
 @FunctionalInterface
-public interface NodeFlattener extends Function<Node, NodeStream> {
-  /**
-   * @deprecated only exists to implement {@link Function}
-   */
-  @Deprecated
+public interface NodeFunction extends UnaryOperator<Node> {
+  static @NonNull NodeFunction identity() {
+    return (node, depth) -> node;
+  }
+
   @Override
-  default @NonNull NodeStream apply(final @NonNull Node node) {
-    return this.flatten(node);
+  default @NonNull Node apply(final @NonNull Node node) {
+    return this.apply(node, 0);
   }
 
   /**
-   * Flattens a node.
-   *
-   * @param node the node
-   * @return the flattened nodes
-   */
-  default @NonNull NodeStream flatten(final @NonNull Node node) {
-    return this.flatten(node, 0);
-  }
-
-  /**
-   * Flattens a node.
+   * Transforms {@code node}, with depth.
    *
    * @param node the node
    * @param depth the depth
-   * @return the flattened nodes
+   * @return the transformed node
    */
-  @NonNull NodeStream flatten(final @NonNull Node node, final int depth);
-
-  abstract class Impl implements NodeFlattener {
-    protected @NonNull Node node(final @NonNull Node node, final int depth) {
-      if(depth < 1) {
-        return node;
-      }
-      return Elements.inherited(node);
-    }
-  }
+  @NonNull Node apply(final @NonNull Node node, final int depth);
 }

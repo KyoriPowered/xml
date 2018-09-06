@@ -21,39 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.node.stream;
+package net.kyori.xml.node.function;
 
-import net.kyori.xml.node.Node;
+import net.kyori.xml.node.ElementNode;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
-
-final class NodeStreamImpl implements NodeStream {
-  private final @NonNull Stream<Node> stream;
-
-  NodeStreamImpl(final @NonNull Stream<Node> stream) {
-    this.stream = stream;
+public interface NodeFunctions {
+  /**
+   * Inherit attributes if the node is an element.
+   *
+   * @return a unary operator
+   * @see ElementNode#inherited()
+   */
+  static @NonNull NodeFunction inherit() {
+    return inherit(0);
   }
 
-  @Override
-  public @NonNull Stream<Node> stream() {
-    return this.stream;
-  }
-
-  @Override
-  public @NonNull NodeStream filter(final @NonNull Predicate<? super Node> predicate) {
-    return new NodeStreamImpl(this.stream.filter(predicate));
-  }
-
-  @Override
-  public @NonNull NodeStream flatMap(final @NonNull Function<? super Node, ? extends NodeStream> function) {
-    return new NodeStreamImpl(this.stream.flatMap(node -> function.apply(node).stream()));
-  }
-
-  @Override
-  public void close() {
-    this.stream.close();
+  /**
+   * Inherit attributes if the node is an element.
+   *
+   * @param minimumDepth the minimum depth to apply the function
+   * @return a unary operator
+   * @see ElementNode#inherited()
+   */
+  static @NonNull NodeFunction inherit(final int minimumDepth) {
+    return (node, depth) -> {
+      if(depth >= minimumDepth && node instanceof ElementNode) {
+        return ((ElementNode) node).inherited();
+      }
+      return node;
+    };
   }
 }

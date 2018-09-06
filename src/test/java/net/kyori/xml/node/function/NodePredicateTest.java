@@ -21,33 +21,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.node.parser;
+package net.kyori.xml.node.function;
 
+import com.google.common.collect.Sets;
 import net.kyori.xml.node.Node;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.junit.jupiter.api.Test;
 
-import javax.inject.Singleton;
+import java.util.function.Predicate;
 
-/**
- * Parses a {@link Node} into a {@link String string}.
- */
-@Singleton
-public class StringParser implements PrimitiveParser<String> {
-  private static final StringParser INSTANCE = new StringParser();
+import static net.kyori.xml.Testing.element;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-  /**
-   * Gets the parser.
-   *
-   * @return the parser
-   * @deprecated prefer injection
-   */
-  @Deprecated
-  public static @NonNull StringParser get() {
-    return INSTANCE;
+class NodePredicateTest {
+  @Test
+  void testSingleNamed() {
+    final Predicate<Node> predicate = NodePredicates.named("bar");
+    assertFalse(predicate.test(element("foo")));
+    assertTrue(predicate.test(element("bar")));
+    assertFalse(predicate.test(element("baz")));
   }
 
-  @Override
-  public @NonNull String throwingParse(final @NonNull Node node, final @NonNull String string) {
-    return string;
+  @Test
+  void testArrayNamed() {
+    final Predicate<Node> predicate = NodePredicates.named("foo", "bar");
+    assertTrue(predicate.test(element("foo")));
+    assertTrue(predicate.test(element("bar")));
+    assertFalse(predicate.test(element("baz")));
+  }
+
+  @Test
+  void testCollectionNamed() {
+    final Predicate<Node> predicate = NodePredicates.named(Sets.newHashSet("foo", "bar"));
+    assertTrue(predicate.test(element("foo")));
+    assertTrue(predicate.test(element("bar")));
+    assertFalse(predicate.test(element("baz")));
   }
 }

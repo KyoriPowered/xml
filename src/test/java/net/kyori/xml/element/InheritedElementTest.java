@@ -24,7 +24,8 @@
 package net.kyori.xml.element;
 
 import net.kyori.xml.Testing;
-import org.jdom2.Element;
+import net.kyori.xml.node.ElementNode;
+import net.kyori.xml.node.Node;
 import org.jdom2.JDOMException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -34,24 +35,28 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class InheritedElementTest {
-  private Element root;
+  private Node root;
 
   @BeforeAll
   void init() throws IOException, JDOMException {
-    this.root = Testing.read("/inherited_test.xml").element();
+    this.root = Testing.read("/inherited_test.xml");
   }
 
   @Test
   void testInherit() {
-    final Element source = this.root.getChild("things").getChild("thing");
-    assertEquals("fed", source.getAttributeValue("abc"));
-    assertNull(source.getAttributeValue("ghi"));
+    final Node source = this.root.element("things").get().element("thing").get();
+    assertEquals("fed", source.attribute("abc").get().value());
+    assertNull(source.attribute("ghi").getOrDefault(null));
 
-    final Element target = Elements.inherited(source);
-    assertEquals("fed", target.getAttributeValue("abc"));
-    assertEquals("jkl", target.getAttributeValue("ghi"));
+    final Node target = ((ElementNode) source).inherited();
+    assertEquals("fed", target.attribute("abc").get().value());
+    assertEquals("jkl", target.attribute("ghi").get().value());
+
+    final Node again = ((ElementNode) target).inherited();
+    assertSame(target, again);
   }
 }

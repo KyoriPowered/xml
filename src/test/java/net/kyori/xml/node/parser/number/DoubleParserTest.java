@@ -21,33 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.node.parser;
+package net.kyori.xml.node.parser.number;
 
-import net.kyori.xml.node.Node;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
-import javax.inject.Singleton;
-
-/**
- * Parses a {@link Node} into a {@link String string}.
- */
-@Singleton
-public class StringParser implements PrimitiveParser<String> {
-  private static final StringParser INSTANCE = new StringParser();
-
-  /**
-   * Gets the parser.
-   *
-   * @return the parser
-   * @deprecated prefer injection
-   */
-  @Deprecated
-  public static @NonNull StringParser get() {
-    return INSTANCE;
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class DoubleParserTest extends AbstractNumberParserTest<Double> {
+  DoubleParserTest() {
+    super(DoubleParser.get());
   }
 
-  @Override
-  public @NonNull String throwingParse(final @NonNull Node node, final @NonNull String string) {
-    return string;
+  @Test
+  void testNegativeInfinityParse() {
+    this.assertNegativeInfinityParse(Double.NEGATIVE_INFINITY);
+  }
+
+  @Test
+  void testNegativeParse() {
+    this.assertParse(-0.30020274551866d, "-0.30020274551866");
+    this.assertParse(-0.15010137275933d, "-0.15010137275933");
+  }
+
+  @Test
+  void testPositiveParse() {
+    this.assertParse(0.15010137275933d, "0.15010137275933");
+    this.assertParse(0.538037613746371d, "0.538037613746371");
+  }
+
+  @Test
+  void testPositiveInfinityParse() {
+    this.assertPositiveInfinityParse(Double.POSITIVE_INFINITY);
   }
 }

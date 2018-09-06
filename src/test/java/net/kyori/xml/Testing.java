@@ -23,8 +23,9 @@
  */
 package net.kyori.xml;
 
-import net.kyori.xml.node.ElementNode;
 import net.kyori.xml.node.Node;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 
@@ -32,10 +33,18 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public interface Testing {
-  static ElementNode read(final String path) throws IOException, JDOMException {
+  static @NonNull Node read(final @NonNull String path) throws IOException, JDOMException {
     final SAXBuilder builder = new SAXBuilder();
     try(final InputStream is = Testing.class.getResourceAsStream(path)) {
       return Node.of(builder.build(is).getRootElement());
     }
+  }
+
+  static @NonNull Node element(final @NonNull String name) {
+    return Node.of(new Element(name));
+  }
+
+  static @NonNull Node element(final @NonNull String name, final @NonNull String value) {
+    return Node.of(new Element(name).setText(value));
   }
 }

@@ -24,13 +24,21 @@
 package net.kyori.xml.node.parser;
 
 import com.google.inject.TypeLiteral;
+import net.kyori.lambda.Maybe;
+import net.kyori.lambda.reflect.Fields;
 import net.kyori.xml.XMLException;
 import net.kyori.xml.node.Node;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import javax.inject.Inject;
 
@@ -38,28 +46,53 @@ import javax.inject.Inject;
  * Parses a {@link Node} into an enum constant.
  */
 public class EnumParser<E extends Enum<E>> implements PrimitiveParser<E> {
-  private final TypeLiteral<E> type;
-  private final Map<String, E> map = new HashMap<>();
-
-  public EnumParser(final @NonNull Class<E> type) {
-    this(TypeLiteral.get(type));
-  }
+  private final Class<E> type;
+  private final Map<String, E> map;
 
   @Inject
   public EnumParser(final @NonNull TypeLiteral<E> type) {
+    this((Class<E>) type.getRawType());
+  }
+
+  public EnumParser(final @NonNull Class<E> type) {
     this.type = type;
 
-    for(final E constant : ((Class<E>) type.getRawType()).getEnumConstants()) {
-      this.map.put(constant.name().toLowerCase(Locale.ENGLISH), constant);
+    final E[] constants = type.getEnumConstants();
+    this.map = new HashMap<>(constants.length);
+    for(final E constant : constants) {
+      getNames(constant).forEach(name -> this.map.put(name, constant));
     }
   }
 
   @Override
   public @NonNull E throwingParse(final @NonNull Node node, final @NonNull String string) throws XMLException {
-    final /* @Nullable */ E constant = this.map.get(string.toLowerCase(Locale.ENGLISH).replace(' ', '_'));
+    final /* @Nullable */ E constant = this.map.get(string);
     if(constant != null) {
       return constant;
     }
-    throw new XMLException(node, "Could not find " + this.type.getRawType().getName() + " with name '" + string + '\'');
+    throw new XMLException(node, "Could not find " + this.type.getName() + " with name '" + string + '\'');
+  }
+
+  private static Stream<String> getNames(final Enum<?> constant) {
+    return Maybe.maybe(Fields.get(constant).getAnnotation(Names.class)).map(names -> Arrays.stream(names.value())).getOrGet(() -> {
+      final String name = constant.name();
+      return Stream.of(
+        name,
+        name.replace('_', ' '),
+        name.toLowerCase(Locale.ENGLISH),
+        name.toLowerCase(Locale.ENGLISH).replace('_', ' ')
+      );
+    });
+  }
+
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.FIELD)
+  @interface Names {
+    /**
+     * Gets the names used for parsing.
+     *
+     * @return the names
+     */
+    String[] value();
   }
 }

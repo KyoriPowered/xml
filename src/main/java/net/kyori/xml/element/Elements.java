@@ -23,14 +23,57 @@
  */
 package net.kyori.xml.element;
 
-import net.kyori.xml.node.ElementNode;
-import net.kyori.xml.node.Node;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jdom2.Element;
 import org.jdom2.Parent;
+import org.jdom2.located.Located;
+import org.jdom2.located.LocatedElement;
+
+import java.util.function.Consumer;
 
 public interface Elements {
+  /**
+   * Copies an element from {@code source} into {@code target}.
+   *
+   * @param source the source element
+   * @param target the target element
+   * @see Element#clone()
+   */
+  static void copy(final @NonNull Element source, final @NonNull Element target) {
+    copy(source, target, null);
+  }
+
+  /**
+   * Copies an element from {@code source} into {@code target}.
+   *
+   * @param source the source element
+   * @param target the target element
+   * @param parent the parent setter
+   * @see Element#clone()
+   */
+  static void copy(final @NonNull Element source, final @NonNull Element target, final @Nullable Consumer<Parent> parent) {
+    if(parent != null) {
+      // Element#clone() does not copy over the parent, but we do
+      parent.accept(source.getParent());
+    }
+
+    // Copy over additional namespaces
+    source.getAdditionalNamespaces().forEach(target::addNamespaceDeclaration);
+
+    // Copy over attributes
+    source.getAttributes().forEach(attribute -> target.setAttribute(attribute.clone()));
+
+    // Copy content
+    target.setContent(source.cloneContent());
+
+    // The element is not guaranteed to be located
+    if(source instanceof Located && target instanceof Located) {
+      ((Located) target).setLine(((Located) source).getLine());
+      ((Located) target).setColumn(((Located) source).getColumn());
+    }
+  }
+
   /**
    * Inherit attributes from {@code source} into {@code target}.
    *
@@ -46,45 +89,60 @@ public interface Elements {
   /**
    * Inherit attributes from {@code source} into {@code target}.
    *
-   * @param source the source element
+   * @param source the source parent
    * @param target the target element
    */
   static void inherit(final @Nullable Element source, final @NonNull Element target) {
-    if(source == null) {
-      return;
+    if(source != null) {
+      // Copy attributes from the source to the target if the target doesn't already
+      // have an attribute with the same name.
+      source.getAttributes().stream()
+        .filter(attribute -> target.getAttribute(attribute.getName()) == null)
+        .forEach(attribute -> target.setAttribute(attribute.clone()));
     }
-
-    // Copy attributes from the source to the target if the target doesn't already
-    // have an attribute with the same name.
-    source.getAttributes().stream()
-      .filter(attribute -> target.getAttribute(attribute.getName()) == null)
-      .forEach(attribute -> target.setAttribute(attribute.clone()));
   }
 
   /**
-   * Returns an element which inherits attributes from its parent element, if present.
-   *
-   * @param node the node
-   * @return the inherited element
+   * An element which inherits attributes from its parent element, if present.
    */
-  static @NonNull Node inherited(final @NonNull Node node) {
-    if(node instanceof ElementNode) {
-      return Node.of(inherited(((ElementNode) node).element()));
+  interface Inherited {
+    /**
+     * Checks if {@code element} is an inherited element.
+     *
+     * @param element the element
+     * @return {@code true} if {@code element} is an inherited element, {@code false} otherwise
+     */
+    static boolean is(final Element element) {
+      return element instanceof Inherited;
     }
-    return node;
-  }
 
-  /**
-   * Returns an element which inherits attributes from its parent element, if present.
-   *
-   * @param element the element
-   * @return the inherited element
-   */
-  static @NonNull Element inherited(final @NonNull Element element) {
-    // Avoid inheriting on an already inherited element
-    if(element instanceof InheritedElement) {
-      return element;
+    /**
+     * Creates an inherited element.
+     *
+     * @param element the element
+     * @return the inherited element
+     */
+    static @NonNull Element of(final @NonNull Element element) {
+      if(element instanceof LocatedElement) {
+        return new LocatedImpl((LocatedElement) element);
+      }
+      return new Impl(element);
     }
-    return new InheritedElement(element);
+
+    final class Impl extends Element implements Inherited {
+      /* package */ Impl(final @NonNull Element that) {
+        super(that.getName(), that.getNamespace());
+        copy(that, this, this::setParent);
+        inherit(that.getParent(), this);
+      }
+    }
+
+    final class LocatedImpl extends LocatedElement implements Inherited {
+      /* package */ LocatedImpl(final @NonNull LocatedElement that) {
+        super(that.getName(), that.getNamespace());
+        copy(that, this, this::setParent);
+        inherit(that.getParent(), this);
+      }
+    }
   }
 }
