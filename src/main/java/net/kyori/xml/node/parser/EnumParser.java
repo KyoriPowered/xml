@@ -74,7 +74,7 @@ public class EnumParser<E extends Enum<E>> implements PrimitiveParser<E> {
   }
 
   private static Stream<String> getNames(final Enum<?> constant) {
-    return Maybe.maybe(Fields.get(constant).getAnnotation(Names.class)).map(names -> Arrays.stream(names.value())).getOrGet(() -> {
+    return Maybe.maybe(Fields.get(constant).getAnnotation(Names.class)).map(names -> Arrays.stream(names.value())).orGet(() -> {
       final String name = constant.name();
       return Stream.of(
         name,

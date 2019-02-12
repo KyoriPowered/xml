@@ -92,7 +92,7 @@ public interface Node {
    * @return a stream of nodes
    */
   default @NonNull Stream<Node> nodes(final @NonNull String... names) {
-    return this.nodes(MoreSets.of(names));
+    return this.nodes(MoreSets.mutable(names));
   }
 
   /**
@@ -140,7 +140,7 @@ public interface Node {
    * @return a stream of nodes
    */
   default @NonNull Stream<Node> elements(final @NonNull String... names) {
-    return this.elements(MoreSets.of(names));
+    return this.elements(MoreSets.mutable(names));
   }
 
   /**
@@ -176,7 +176,7 @@ public interface Node {
    * @return a stream of nodes
    */
   default @NonNull Stream<Node> attributes(final @NonNull String... names) {
-    return this.attributes(MoreSets.of(names));
+    return this.attributes(MoreSets.mutable(names));
   }
 
   /**

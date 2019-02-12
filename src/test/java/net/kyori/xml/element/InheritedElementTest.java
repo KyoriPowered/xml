@@ -50,7 +50,7 @@ class InheritedElementTest {
   void testInherit() {
     final Node source = this.root.element("things").get().element("thing").get();
     assertEquals("fed", source.attribute("abc").get().value());
-    assertNull(source.attribute("ghi").getOrDefault(null));
+    assertNull(source.attribute("ghi").orDefault(null));
 
     final Node target = ((ElementNode) source).inherited();
     assertEquals("fed", target.attribute("abc").get().value());

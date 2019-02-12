@@ -72,7 +72,7 @@ public final class NodePredicates {
    * @return a node predicate
    */
   public static @NonNull NodePredicate named(final @NonNull String... names) {
-    return named(MoreSets.of(names));
+    return named(MoreSets.mutable(names));
   }
 
   /**
