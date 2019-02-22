@@ -23,7 +23,7 @@
  */
 package net.kyori.xml.node.finder;
 
-import net.kyori.lambda.Maybe;
+import net.kyori.mu.Maybe;
 import net.kyori.xml.Testing;
 import net.kyori.xml.node.Node;
 import org.jdom2.JDOMException;

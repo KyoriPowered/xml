@@ -23,8 +23,8 @@
  */
 package net.kyori.xml.node;
 
-import net.kyori.lambda.Maybe;
-import net.kyori.lambda.collection.MoreSets;
+import net.kyori.mu.Maybe;
+import net.kyori.mu.collection.MuSets;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.Collection;
@@ -92,7 +92,7 @@ public interface Node {
    * @return a stream of nodes
    */
   default @NonNull Stream<Node> nodes(final @NonNull String... names) {
-    return this.nodes(MoreSets.mutable(names));
+    return this.nodes(MuSets.mutable(names));
   }
 
   /**
@@ -140,7 +140,7 @@ public interface Node {
    * @return a stream of nodes
    */
   default @NonNull Stream<Node> elements(final @NonNull String... names) {
-    return this.elements(MoreSets.mutable(names));
+    return this.elements(MuSets.mutable(names));
   }
 
   /**
@@ -176,7 +176,7 @@ public interface Node {
    * @return a stream of nodes
    */
   default @NonNull Stream<Node> attributes(final @NonNull String... names) {
-    return this.attributes(MoreSets.mutable(names));
+    return this.attributes(MuSets.mutable(names));
   }
 
   /**

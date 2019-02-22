@@ -23,7 +23,7 @@
  */
 package net.kyori.xml.node.function;
 
-import net.kyori.lambda.collection.MoreSets;
+import net.kyori.mu.collection.MuSets;
 import net.kyori.xml.node.Node;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
@@ -72,7 +72,7 @@ public final class NodePredicates {
    * @return a node predicate
    */
   public static @NonNull NodePredicate named(final @NonNull String... names) {
-    return named(MoreSets.mutable(names));
+    return named(MuSets.mutable(names));
   }
 
   /**

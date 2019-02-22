@@ -23,7 +23,7 @@
  */
 package net.kyori.xml.document.factory;
 
-import net.kyori.lambda.Composer;
+import net.kyori.mu.Composer;
 import net.kyori.xml.XMLException;
 import net.kyori.xml.node.Node;
 import org.jdom2.Document;

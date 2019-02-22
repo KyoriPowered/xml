@@ -23,8 +23,8 @@
  */
 package net.kyori.xml.node.parser;
 
-import net.kyori.lambda.Maybe;
-import net.kyori.lambda.function.ThrowingSupplier;
+import net.kyori.mu.Maybe;
+import net.kyori.mu.function.ThrowingSupplier;
 import net.kyori.xml.XMLException;
 import net.kyori.xml.node.Node;
 import org.checkerframework.checker.nullness.qual.NonNull;
