@@ -24,11 +24,11 @@
 package net.kyori.xml.node;
 
 import net.kyori.mu.Maybe;
-import net.kyori.mu.collection.MuSets;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public interface Node {
@@ -92,7 +92,17 @@ public interface Node {
    * @return a stream of nodes
    */
   default @NonNull Stream<Node> nodes(final @NonNull String... names) {
-    return this.nodes(MuSets.mutable(names));
+    return this.nodes(Stream.of(names));
+  }
+
+  /**
+   * Creates a stream of nodes from the attributes and children elements of this node matching a set of names.
+   *
+   * @param names the names
+   * @return a stream of nodes
+   */
+  default @NonNull Stream<Node> nodes(final @NonNull Stream<String> names) {
+    return this.nodes(names.collect(Collectors.toSet()));
   }
 
   /**
@@ -140,7 +150,17 @@ public interface Node {
    * @return a stream of nodes
    */
   default @NonNull Stream<Node> elements(final @NonNull String... names) {
-    return this.elements(MuSets.mutable(names));
+    return this.elements(Stream.of(names));
+  }
+
+  /**
+   * Creates a stream of nodes from the children elements of this node matching a set of names.
+   *
+   * @param names the names
+   * @return a stream of nodes
+   */
+  default @NonNull Stream<Node> elements(final @NonNull Stream<String> names) {
+    return this.elements(names.collect(Collectors.toSet()));
   }
 
   /**
@@ -176,7 +196,17 @@ public interface Node {
    * @return a stream of nodes
    */
   default @NonNull Stream<Node> attributes(final @NonNull String... names) {
-    return this.attributes(MuSets.mutable(names));
+    return this.attributes(Stream.of(names));
+  }
+
+  /**
+   * Creates a stream of nodes from the attributes of this node matching a set of names.
+   *
+   * @param names the names
+   * @return a stream of nodes
+   */
+  default @NonNull Stream<Node> attributes(final @NonNull Stream<String> names) {
+    return this.attributes(names.collect(Collectors.toSet()));
   }
 
   /**

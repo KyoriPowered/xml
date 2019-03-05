@@ -23,12 +23,13 @@
  */
 package net.kyori.xml.node.function;
 
-import net.kyori.mu.collection.MuSets;
 import net.kyori.xml.node.Node;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class NodePredicates {
   private static final NodePredicate ALWAYS_FALSE = (node, depth) -> false;
@@ -72,7 +73,17 @@ public final class NodePredicates {
    * @return a node predicate
    */
   public static @NonNull NodePredicate named(final @NonNull String... names) {
-    return named(MuSets.mutable(names));
+    return named(Stream.of(names));
+  }
+
+  /**
+   * Gets a node predicate that returns {@code true} if {@code names} contains the {@link Node#name() name} of the node.
+   *
+   * @param names the names
+   * @return a node predicate
+   */
+  public static @NonNull NodePredicate named(final @NonNull Stream<String> names) {
+    return named(names.collect(Collectors.toSet()));
   }
 
   /**
