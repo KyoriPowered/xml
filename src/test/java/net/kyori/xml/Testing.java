@@ -1,7 +1,7 @@
 /*
  * This file is part of xml, licensed under the MIT License.
  *
- * Copyright (c) 2018 KyoriPowered
+ * Copyright (c) 2018-2020 KyoriPowered
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,14 +23,13 @@
  */
 package net.kyori.xml;
 
+import java.io.IOException;
+import java.io.InputStream;
 import net.kyori.xml.node.Node;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 public interface Testing {
   static @NonNull Node read(final @NonNull String path) throws IOException, JDOMException {

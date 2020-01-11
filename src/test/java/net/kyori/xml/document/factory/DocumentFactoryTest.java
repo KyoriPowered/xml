@@ -1,7 +1,7 @@
 /*
  * This file is part of xml, licensed under the MIT License.
  *
- * Copyright (c) 2018 KyoriPowered
+ * Copyright (c) 2018-2020 KyoriPowered
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,17 +23,15 @@
  */
 package net.kyori.xml.document.factory;
 
-import net.kyori.mu.Composer;
-import net.kyori.xml.XMLException;
-import net.kyori.xml.node.Node;
-import org.jdom2.Document;
-import org.jdom2.input.SAXBuilder;
-import org.jdom2.located.LocatedJDOMFactory;
-import org.junit.jupiter.api.Test;
-
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import net.kyori.mu.Composer;
+import net.kyori.xml.XMLException;
+import net.kyori.xml.node.Node;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.located.LocatedJDOMFactory;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -44,8 +42,7 @@ class DocumentFactoryTest {
       .builder(Composer.accept(new SAXBuilder(), builder -> builder.setJDOMFactory(new LocatedJDOMFactory())))
       .includePaths(path("/includes"))
       .build();
-    final Document document = factory.read(path("/include_test.xml"));
-    final Node node = Node.of(document.getRootElement());
+    final Node node = factory.readNode(path("/include_test.xml"));
     assertEquals(3, node.nodes().count());
     assertEquals(1, node.nodes("things").count());
     assertEquals(2, node.nodes("thingy").count());

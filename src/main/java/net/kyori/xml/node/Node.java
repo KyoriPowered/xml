@@ -1,7 +1,7 @@
 /*
  * This file is part of xml, licensed under the MIT License.
  *
- * Copyright (c) 2018 KyoriPowered
+ * Copyright (c) 2018-2020 KyoriPowered
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,13 +23,13 @@
  */
 package net.kyori.xml.node;
 
-import net.kyori.mu.Maybe;
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import net.kyori.mu.AmbiguousElementException;
+import net.kyori.mu.Maybe;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 public interface Node {
   /**
@@ -120,7 +120,7 @@ public interface Node {
    *
    * @param name the name
    * @return the node
-   * @throws IllegalArgumentException if more than one node named {@code name} is found
+   * @throws AmbiguousElementException if more than one node named {@code name} is found
    */
   default @NonNull Maybe<Node> node(final @NonNull String name) {
     return this.nodes(name).collect(Maybe.collector());
@@ -176,7 +176,7 @@ public interface Node {
    *
    * @param name the name
    * @return the node
-   * @throws IllegalArgumentException if more than one element named {@code name} is found
+   * @throws AmbiguousElementException if more than one element named {@code name} is found
    */
   default @NonNull Maybe<Node> element(final @NonNull String name) {
     return this.elements(name).collect(Maybe.collector());
@@ -222,7 +222,7 @@ public interface Node {
    *
    * @param name the name
    * @return the node
-   * @throws IllegalArgumentException if more than one attribute named {@code name} is found
+   * @throws AmbiguousElementException if more than one attribute named {@code name} is found
    */
   default @NonNull Maybe<Node> attribute(final @NonNull String name) {
     return this.attributes(name).collect(Maybe.collector());

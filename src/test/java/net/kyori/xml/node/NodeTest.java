@@ -1,7 +1,7 @@
 /*
  * This file is part of xml, licensed under the MIT License.
  *
- * Copyright (c) 2018 KyoriPowered
+ * Copyright (c) 2018-2020 KyoriPowered
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,14 +23,13 @@
  */
 package net.kyori.xml.node;
 
+import java.io.IOException;
+import java.util.Arrays;
 import net.kyori.xml.Testing;
 import org.jdom2.JDOMException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-
-import java.io.IOException;
-import java.util.Arrays;
 
 import static com.google.common.truth.Truth8.assertThat;
 
@@ -56,9 +55,9 @@ class NodeTest {
 
   @Test
   void testNode() {
-    assertThat(this.node.node("a-attribute").optional().map(Node::value)).hasValue("foo");
-    assertThat(this.node.node("a-element").optional().map(Node::value)).hasValue("baz");
-    assertThat(this.node.node("abc").optional().map(Node::value)).isEmpty();
+    assertThat(this.node.node("a-attribute").map(Node::value).optional()).hasValue("foo");
+    assertThat(this.node.node("a-element").map(Node::value).optional()).hasValue("baz");
+    assertThat(this.node.node("abc").map(Node::value).optional()).isEmpty();
   }
 
   @Test
@@ -71,8 +70,8 @@ class NodeTest {
 
   @Test
   void testElement() {
-    assertThat(this.node.element("a-element").optional().map(Node::value)).hasValue("baz");
-    assertThat(this.node.element("abc").optional().map(Node::value)).isEmpty();
+    assertThat(this.node.element("a-element").map(Node::value).optional()).hasValue("baz");
+    assertThat(this.node.element("abc").map(Node::value).optional()).isEmpty();
   }
 
   @Test
@@ -85,7 +84,7 @@ class NodeTest {
 
   @Test
   void testAttribute() {
-    assertThat(this.node.attribute("a-attribute").optional().map(Node::value)).hasValue("foo");
-    assertThat(this.node.attribute("abc").optional().map(Node::value)).isEmpty();
+    assertThat(this.node.attribute("a-attribute").map(Node::value).optional()).hasValue("foo");
+    assertThat(this.node.attribute("abc").map(Node::value).optional()).isEmpty();
   }
 }

@@ -1,7 +1,7 @@
 /*
  * This file is part of xml, licensed under the MIT License.
  *
- * Copyright (c) 2018 KyoriPowered
+ * Copyright (c) 2018-2020 KyoriPowered
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,8 +31,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class EnumParserTest {
-  private static final AbstractParserTest<Thing> THING = new AbstractParserTest<>(new EnumParser<>(Thing.class));
-  private static final AbstractParserTest<Another> ANOTHER = new AbstractParserTest<>(new EnumParser<>(Another.class));
+  private static final ParserTest<Thing> THING = new ParserTest<>(new EnumParser<>(Thing.class));
+  private static final ParserTest<Another> ANOTHER = new ParserTest<>(new EnumParser<>(Another.class));
 
   @Test
   void testParse() {

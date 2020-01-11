@@ -1,7 +1,7 @@
 /*
  * This file is part of xml, licensed under the MIT License.
  *
- * Copyright (c) 2018 KyoriPowered
+ * Copyright (c) 2018-2020 KyoriPowered
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,13 +23,13 @@
  */
 package net.kyori.xml.document.factory;
 
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jdom2.input.SAXBuilder;
-
-import java.nio.file.Path;
-import java.util.Collections;
-import java.util.List;
 
 import static java.util.Objects.requireNonNull;
 
@@ -52,6 +52,11 @@ final class DocumentFactoryBuilderImpl implements DocumentFactory.Builder {
   @Override
   public @NonNull DocumentFactory build() {
     requireNonNull(this.builder, "builder");
-    return new DocumentFactoryImpl(this);
+    final List<Path> includePaths = this.includePaths;
+    if(includePaths.isEmpty()) {
+      return new SimpleDocumentFactory(this.builder);
+    } else {
+      return new IncludingDocumentFactory(this.builder, new ArrayList<>(includePaths));
+    }
   }
 }

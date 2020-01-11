@@ -1,7 +1,7 @@
 /*
  * This file is part of xml, licensed under the MIT License.
  *
- * Copyright (c) 2018 KyoriPowered
+ * Copyright (c) 2018-2020 KyoriPowered
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,10 @@
  */
 package net.kyori.xml.node.finder;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 import net.kyori.mu.Maybe;
 import net.kyori.xml.Testing;
 import net.kyori.xml.node.Node;
@@ -30,10 +34,6 @@ import org.jdom2.JDOMException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -49,7 +49,7 @@ class NodeFinderTest {
   @Test
   void testBranchLeaf() {
     final NodeFinder finder = new BranchLeafNodeFinder("things", "thing");
-    final List<Node> nodes = finder.nodes(this.root.elements().collect(Maybe.collector()).get()).collect(Collectors.toList());
+    final List<Node> nodes = finder.nodes(this.root.elements().collect(Maybe.collector()).orThrow(NoSuchElementException::new)).collect(Collectors.toList());
     assertEquals(2, nodes.size());
     nodes.forEach(node -> assertEquals("thing", node.name()));
   }

@@ -1,7 +1,7 @@
 /*
  * This file is part of xml, licensed under the MIT License.
  *
- * Copyright (c) 2018 KyoriPowered
+ * Copyright (c) 2018-2020 KyoriPowered
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,23 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.node.parser.number;
+package net.kyori.xml.document.factory;
 
-import net.kyori.xml.node.parser.AbstractParserTest;
-import net.kyori.xml.node.parser.Parser;
+import java.nio.file.Path;
+import net.kyori.xml.XMLException;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jdom2.Document;
+import org.jdom2.input.SAXBuilder;
 
-abstract class AbstractNumberParserTest<T> extends AbstractParserTest<T> {
-  AbstractNumberParserTest(final Parser<T> parser) {
-    super(parser);
+final class SimpleDocumentFactory extends AbstractDocumentFactory {
+  SimpleDocumentFactory(final @NonNull SAXBuilder builder) {
+    super(builder);
   }
 
-  final void assertNegativeInfinityParse(final T expected) {
-    this.assertParse(expected, NumberParser.NEGATIVE_INFINITY_SYMBOL_A);
-    this.assertParse(expected, NumberParser.NEGATIVE_INFINITY_SYMBOL_B);
-  }
-
-  final void assertPositiveInfinityParse(final T expected) {
-    this.assertParse(expected, NumberParser.POSITIVE_INFINITY_SYMBOL_A);
-    this.assertParse(expected, NumberParser.POSITIVE_INFINITY_SYMBOL_B);
+  @Override
+  public @NonNull Document read(final @NonNull Path path) throws XMLException {
+    return this.build(path);
   }
 }

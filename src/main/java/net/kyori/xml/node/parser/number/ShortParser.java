@@ -1,7 +1,7 @@
 /*
  * This file is part of xml, licensed under the MIT License.
  *
- * Copyright (c) 2018 KyoriPowered
+ * Copyright (c) 2018-2020 KyoriPowered
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,11 @@
  */
 package net.kyori.xml.node.parser.number;
 
+import javax.inject.Singleton;
 import net.kyori.xml.XMLException;
 import net.kyori.xml.node.Node;
+import net.kyori.xml.node.parser.ParseException;
 import org.checkerframework.checker.nullness.qual.NonNull;
-
-import javax.inject.Singleton;
 
 /**
  * Parses a {@link Node} into a {@link Short short}.
@@ -40,9 +40,7 @@ public class ShortParser implements NumberParser<Short> {
    * Gets the parser.
    *
    * @return the parser
-   * @deprecated prefer injection
    */
-  @Deprecated
   public static @NonNull ShortParser get() {
     return INSTANCE;
   }
@@ -57,7 +55,7 @@ public class ShortParser implements NumberParser<Short> {
     try {
       return Short.parseShort(string);
     } catch(final NumberFormatException e) {
-      throw new XMLException(node, "Could not parse '" + string + "' as a short", e);
+      throw new ParseException(node, "Could not parse '" + string + "' as a short", e);
     }
   }
 

@@ -23,44 +23,21 @@
  */
 package net.kyori.xml.node.parser.number;
 
-import javax.inject.Singleton;
-import net.kyori.xml.XMLException;
-import net.kyori.xml.node.Node;
-import net.kyori.xml.node.parser.ParseException;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import net.kyori.xml.node.parser.ParserTest;
+import net.kyori.xml.node.parser.Parser;
 
-/**
- * Parses a {@link Node} into a {@link Double double}.
- */
-@Singleton
-public class DoubleParser implements NumberParser<Double> {
-  private static final DoubleParser INSTANCE = new DoubleParser();
-
-  /**
-   * Gets the parser.
-   *
-   * @return the parser
-   */
-  public static @NonNull DoubleParser get() {
-    return INSTANCE;
+abstract class NumberParserTest<T> extends ParserTest<T> {
+  NumberParserTest(final Parser<T> parser) {
+    super(parser);
   }
 
-  @Override
-  public @NonNull Double negativeInfinity(final @NonNull Node node, final @NonNull String string) {
-    return Double.NEGATIVE_INFINITY;
+  final void assertNegativeInfinityParse(final T expected) {
+    this.assertParse(expected, NumberParser.NEGATIVE_INFINITY_SYMBOL_A);
+    this.assertParse(expected, NumberParser.NEGATIVE_INFINITY_SYMBOL_B);
   }
 
-  @Override
-  public @NonNull Double finite(final @NonNull Node node, final @NonNull String string) throws XMLException {
-    try {
-      return Double.parseDouble(string);
-    } catch(final NumberFormatException e) {
-      throw new ParseException(node, "Could not parse '" + string + "' as a double", e);
-    }
-  }
-
-  @Override
-  public @NonNull Double positiveInfinity(final @NonNull Node node, final @NonNull String string) {
-    return Double.POSITIVE_INFINITY;
+  final void assertPositiveInfinityParse(final T expected) {
+    this.assertParse(expected, NumberParser.POSITIVE_INFINITY_SYMBOL_A);
+    this.assertParse(expected, NumberParser.POSITIVE_INFINITY_SYMBOL_B);
   }
 }

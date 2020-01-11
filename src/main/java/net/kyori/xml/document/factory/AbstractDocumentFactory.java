@@ -1,7 +1,7 @@
 /*
  * This file is part of xml, licensed under the MIT License.
  *
- * Copyright (c) 2018 KyoriPowered
+ * Copyright (c) 2018-2020 KyoriPowered
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,23 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.node.parser;
+package net.kyori.xml.document.factory;
 
-import static net.kyori.xml.Testing.element;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.io.IOException;
+import java.nio.file.Path;
+import net.kyori.xml.XMLException;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jdom2.Document;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
 
-public class AbstractParserTest<T> {
-  protected final Parser<T> parser;
+abstract class AbstractDocumentFactory implements DocumentFactory {
+  private final SAXBuilder builder;
 
-  protected AbstractParserTest(final Parser<T> parser) {
-    this.parser = parser;
+  AbstractDocumentFactory(final @NonNull SAXBuilder builder) {
+    this.builder = builder;
   }
 
-  protected final void assertParse(final T expected, final String string) {
-    assertEquals(expected, this.parse(string));
-  }
-
-  private T parse(final String string) {
-    return this.parser.parse(element("memory", string));
+  final @NonNull Document build(final @NonNull Path path) throws XMLException {
+    try {
+      return this.builder.build(path.toFile());
+    } catch(final IOException e) {
+      throw new XMLException("Encountered an exception while reading", e);
+    } catch(final JDOMException e) {
+      throw new XMLException("Encountered an exception while parsing", e);
+    }
   }
 }

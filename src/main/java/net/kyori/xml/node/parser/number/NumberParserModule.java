@@ -1,7 +1,7 @@
 /*
  * This file is part of xml, licensed under the MIT License.
  *
- * Copyright (c) 2018 KyoriPowered
+ * Copyright (c) 2018-2020 KyoriPowered
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,21 +33,11 @@ public final class NumberParserModule extends AbstractModule {
   @Override
   protected void configure() {
     final ParserBinder parsers = new ParserBinder(this.binder());
-
-    // normal
     parsers.bind(Byte.class).toInstance(ByteParser.get());
     parsers.bind(Double.class).toInstance(DoubleParser.get());
     parsers.bind(Float.class).toInstance(FloatParser.get());
     parsers.bind(Integer.class).toInstance(IntParser.get());
     parsers.bind(Long.class).toInstance(LongParser.get());
     parsers.bind(Short.class).toInstance(ShortParser.get());
-
-    // primitive
-    parsers.bindPrimitive(Byte.class).toInstance(ByteParser.get());
-    parsers.bindPrimitive(Double.class).toInstance(DoubleParser.get());
-    parsers.bindPrimitive(Float.class).toInstance(FloatParser.get());
-    parsers.bindPrimitive(Integer.class).toInstance(IntParser.get());
-    parsers.bindPrimitive(Long.class).toInstance(LongParser.get());
-    parsers.bindPrimitive(Short.class).toInstance(ShortParser.get());
   }
 }

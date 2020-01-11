@@ -1,7 +1,7 @@
 /*
  * This file is part of xml, licensed under the MIT License.
  *
- * Copyright (c) 2018 KyoriPowered
+ * Copyright (c) 2018-2020 KyoriPowered
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,14 +23,14 @@
  */
 package net.kyori.xml.document.factory;
 
-import net.kyori.xml.XMLException;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.jdom2.Document;
-import org.jdom2.input.SAXBuilder;
-
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import net.kyori.xml.XMLException;
+import net.kyori.xml.node.Node;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jdom2.Document;
+import org.jdom2.input.SAXBuilder;
 
 import static java.util.Objects.requireNonNull;
 
@@ -61,6 +61,19 @@ public interface DocumentFactory {
    * @throws XMLException if an exception was encountered while parsing
    */
   @NonNull Document read(final @NonNull Path path) throws XMLException;
+
+  /**
+   * Reads the root node in a document.
+   *
+   * @param path the path
+   * @return the node
+   * @throws XMLException if an exception was encountered while reading
+   * @throws XMLException if an exception was encountered while parsing
+   */
+  default @NonNull Node readNode(final @NonNull Path path) throws XMLException {
+    final Document document = this.read(path);
+    return Node.of(document.getRootElement());
+  }
 
   /**
    * A document factory builder.

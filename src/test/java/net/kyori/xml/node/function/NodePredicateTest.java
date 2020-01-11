@@ -1,7 +1,7 @@
 /*
  * This file is part of xml, licensed under the MIT License.
  *
- * Copyright (c) 2018 KyoriPowered
+ * Copyright (c) 2018-2020 KyoriPowered
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,10 +24,9 @@
 package net.kyori.xml.node.function;
 
 import com.google.common.collect.Sets;
+import java.util.function.Predicate;
 import net.kyori.xml.node.Node;
 import org.junit.jupiter.api.Test;
-
-import java.util.function.Predicate;
 
 import static net.kyori.xml.Testing.element;
 import static org.junit.jupiter.api.Assertions.assertFalse;

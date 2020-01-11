@@ -1,7 +1,7 @@
 /*
  * This file is part of xml, licensed under the MIT License.
  *
- * Copyright (c) 2018 KyoriPowered
+ * Copyright (c) 2018-2020 KyoriPowered
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,12 +23,11 @@
  */
 package net.kyori.xml.node;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
-
 import java.util.Collection;
 import java.util.Objects;
 import java.util.stream.Stream;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public interface AttributeNode extends Node {
   /**
@@ -77,13 +76,13 @@ public interface AttributeNode extends Node {
   public boolean equals(final @Nullable Object other) {
     if(this == other) return true;
     if(other == null || this.getClass() != other.getClass()) return false;
-    final AbstractAttributeNode that = (AbstractAttributeNode) other;
+    final AbstractAttributeNode<?> that = (AbstractAttributeNode<?>) other;
     return Objects.equals(this.attribute, that.attribute);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(this.attribute);
+    return Objects.hashCode(this.attribute);
   }
 
   @Override

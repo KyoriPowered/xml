@@ -1,7 +1,7 @@
 /*
  * This file is part of xml, licensed under the MIT License.
  *
- * Copyright (c) 2018 KyoriPowered
+ * Copyright (c) 2018-2020 KyoriPowered
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,10 +23,9 @@
  */
 package net.kyori.xml.node.parser;
 
+import javax.inject.Singleton;
 import net.kyori.xml.node.Node;
 import org.checkerframework.checker.nullness.qual.NonNull;
-
-import javax.inject.Singleton;
 
 /**
  * Parses a {@link Node} into a {@link String string}.
@@ -39,9 +38,7 @@ public class StringParser implements PrimitiveParser<String> {
    * Gets the parser.
    *
    * @return the parser
-   * @deprecated prefer injection
    */
-  @Deprecated
   public static @NonNull StringParser get() {
     return INSTANCE;
   }

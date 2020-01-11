@@ -21,46 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.node.parser.number;
+package net.kyori.xml.document.factory;
 
-import javax.inject.Singleton;
 import net.kyori.xml.XMLException;
-import net.kyori.xml.node.Node;
-import net.kyori.xml.node.parser.ParseException;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jdom2.Content;
+import org.jdom2.Element;
 
-/**
- * Parses a {@link Node} into a {@link Double double}.
- */
-@Singleton
-public class DoubleParser implements NumberParser<Double> {
-  private static final DoubleParser INSTANCE = new DoubleParser();
+abstract class PreProcessor {
+  void processChildren(final Element parent) throws XMLException {
+    for(int i = 0; i < parent.getContentSize(); i++) {
+      final Content content = parent.getContent(i);
+      if(!(content instanceof Element)) {
+        continue;
+      }
 
-  /**
-   * Gets the parser.
-   *
-   * @return the parser
-   */
-  public static @NonNull DoubleParser get() {
-    return INSTANCE;
-  }
-
-  @Override
-  public @NonNull Double negativeInfinity(final @NonNull Node node, final @NonNull String string) {
-    return Double.NEGATIVE_INFINITY;
-  }
-
-  @Override
-  public @NonNull Double finite(final @NonNull Node node, final @NonNull String string) throws XMLException {
-    try {
-      return Double.parseDouble(string);
-    } catch(final NumberFormatException e) {
-      throw new ParseException(node, "Could not parse '" + string + "' as a double", e);
+      final Element child = (Element) content;
+      if(this.processChild(i, parent, child)) {
+        i--;
+      } else {
+        this.processChildren(child);
+      }
     }
   }
 
-  @Override
-  public @NonNull Double positiveInfinity(final @NonNull Node node, final @NonNull String string) {
-    return Double.POSITIVE_INFINITY;
-  }
+  abstract boolean processChild(final int index, final Element parent, final Element child) throws XMLException;
 }

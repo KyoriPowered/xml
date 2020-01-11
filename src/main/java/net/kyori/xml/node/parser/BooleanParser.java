@@ -1,7 +1,7 @@
 /*
  * This file is part of xml, licensed under the MIT License.
  *
- * Copyright (c) 2018 KyoriPowered
+ * Copyright (c) 2018-2020 KyoriPowered
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,10 @@
  */
 package net.kyori.xml.node.parser;
 
+import javax.inject.Singleton;
 import net.kyori.xml.XMLException;
 import net.kyori.xml.node.Node;
 import org.checkerframework.checker.nullness.qual.NonNull;
-
-import javax.inject.Singleton;
 
 /**
  * Parses a {@link Node} into a {@link Boolean boolean}.
@@ -40,20 +39,26 @@ public class BooleanParser implements PrimitiveParser<Boolean> {
    * Gets the parser.
    *
    * @return the parser
-   * @deprecated prefer injection
    */
-  @Deprecated
   public static @NonNull BooleanParser get() {
     return INSTANCE;
   }
 
   @Override
   public @NonNull Boolean throwingParse(final @NonNull Node node, final @NonNull String string) throws XMLException {
-    if(string.equals("true")) {
+    if(this.isTrue(string)) {
       return true;
-    } else if(string.equals("false")) {
+    } else if(this.isFalse(string)) {
       return false;
     }
-    throw new XMLException(node, "Could not parse '" + string + "' as a boolean");
+    throw new ParseException(node, "Could not parse '" + string + "' as a boolean");
+  }
+
+  protected boolean isTrue(final @NonNull String string) {
+    return string.equals("true");
+  }
+
+  protected boolean isFalse(final @NonNull String string) {
+    return string.equals("false");
   }
 }

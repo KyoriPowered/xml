@@ -1,7 +1,7 @@
 /*
  * This file is part of xml, licensed under the MIT License.
  *
- * Copyright (c) 2018 KyoriPowered
+ * Copyright (c) 2018-2020 KyoriPowered
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,7 @@
 package net.kyori.xml.node.parser;
 
 import com.google.inject.Binder;
+import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
 import com.google.inject.binder.AnnotatedBindingBuilder;
 import net.kyori.violet.FriendlyTypeLiteral;
@@ -58,29 +59,18 @@ public class ParserBinder {
    * @param <T> the type
    * @return a binding builder
    */
+  public <T> @NonNull AnnotatedBindingBuilder<Parser<T>> bind(final @NonNull Key<T> type) {
+    return this.bind(type.getTypeLiteral());
+  }
+
+  /**
+   * Creates a binding builder for binding a parser for {@code T}.
+   *
+   * @param type the type
+   * @param <T> the type
+   * @return a binding builder
+   */
   public <T> @NonNull AnnotatedBindingBuilder<Parser<T>> bind(final @NonNull TypeLiteral<T> type) {
     return this.binder.bind(new FriendlyTypeLiteral<Parser<T>>() {}.where(new TypeArgument<T>(type) {}));
-  }
-
-  /**
-   * Creates a binding builder for binding a primitive parser for {@code T}.
-   *
-   * @param type the type
-   * @param <T> the type
-   * @return a binding builder
-   */
-  public <T> @NonNull AnnotatedBindingBuilder<PrimitiveParser<T>> bindPrimitive(final @NonNull Class<T> type) {
-    return this.bindPrimitive(TypeLiteral.get(type));
-  }
-
-  /**
-   * Creates a binding builder for binding a primitive parser for {@code T}.
-   *
-   * @param type the type
-   * @param <T> the type
-   * @return a binding builder
-   */
-  public <T> @NonNull AnnotatedBindingBuilder<PrimitiveParser<T>> bindPrimitive(final @NonNull TypeLiteral<T> type) {
-    return this.binder.bind(new FriendlyTypeLiteral<PrimitiveParser<T>>() {}.where(new TypeArgument<T>(type) {}));
   }
 }

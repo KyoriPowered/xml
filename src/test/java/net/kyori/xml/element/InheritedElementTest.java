@@ -1,7 +1,7 @@
 /*
  * This file is part of xml, licensed under the MIT License.
  *
- * Copyright (c) 2018 KyoriPowered
+ * Copyright (c) 2018-2020 KyoriPowered
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,8 @@
  */
 package net.kyori.xml.element;
 
+import java.io.IOException;
+import java.util.NoSuchElementException;
 import net.kyori.xml.Testing;
 import net.kyori.xml.node.ElementNode;
 import net.kyori.xml.node.Node;
@@ -30,8 +32,6 @@ import org.jdom2.JDOMException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-
-import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -48,13 +48,13 @@ class InheritedElementTest {
 
   @Test
   void testInherit() {
-    final Node source = this.root.element("things").get().element("thing").get();
-    assertEquals("fed", source.attribute("abc").get().value());
+    final Node source = this.root.element("things").orThrow(NoSuchElementException::new).element("thing").orThrow(NoSuchElementException::new);
+    assertEquals("fed", source.attribute("abc").orThrow(NoSuchElementException::new).value());
     assertNull(source.attribute("ghi").orDefault(null));
 
     final Node target = ((ElementNode) source).inherited();
-    assertEquals("fed", target.attribute("abc").get().value());
-    assertEquals("jkl", target.attribute("ghi").get().value());
+    assertEquals("fed", target.attribute("abc").orThrow(NoSuchElementException::new).value());
+    assertEquals("jkl", target.attribute("ghi").orThrow(NoSuchElementException::new).value());
 
     final Node again = ((ElementNode) target).inherited();
     assertSame(target, again);

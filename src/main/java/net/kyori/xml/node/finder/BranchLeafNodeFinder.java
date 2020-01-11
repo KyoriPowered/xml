@@ -1,7 +1,7 @@
 /*
  * This file is part of xml, licensed under the MIT License.
  *
- * Copyright (c) 2018 KyoriPowered
+ * Copyright (c) 2018-2020 KyoriPowered
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,15 +23,14 @@
  */
 package net.kyori.xml.node.finder;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.stream.Stream;
 import net.kyori.xml.node.Node;
 import net.kyori.xml.node.function.NodeFunction;
 import net.kyori.xml.node.function.NodePredicate;
 import net.kyori.xml.node.function.NodePredicates;
 import org.checkerframework.checker.nullness.qual.NonNull;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.stream.Stream;
 
 public class BranchLeafNodeFinder implements NodeDepthFinder {
   private final NodePredicate branchPredicate;

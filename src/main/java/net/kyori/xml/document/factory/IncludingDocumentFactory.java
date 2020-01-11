@@ -1,7 +1,7 @@
 /*
  * This file is part of xml, licensed under the MIT License.
  *
- * Copyright (c) 2018 KyoriPowered
+ * Copyright (c) 2018-2020 KyoriPowered
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,12 @@
  */
 package net.kyori.xml.document.factory;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
 import net.kyori.xml.XMLException;
 import net.kyori.xml.node.Node;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -30,23 +36,14 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jdom2.Content;
 import org.jdom2.Document;
 import org.jdom2.Element;
-import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-
-final class DocumentFactoryImpl implements DocumentFactory {
-  private final SAXBuilder builder;
+final class IncludingDocumentFactory extends AbstractDocumentFactory {
   private final List<Path> includePaths;
 
-  DocumentFactoryImpl(final @NonNull DocumentFactoryBuilderImpl builder) {
-    this.builder = builder.builder;
-    this.includePaths = builder.includePaths;
+  IncludingDocumentFactory(final @NonNull SAXBuilder builder, final @NonNull List<Path> includePaths) {
+    super(builder);
+    this.includePaths = includePaths;
   }
 
   @Override
@@ -54,47 +51,22 @@ final class DocumentFactoryImpl implements DocumentFactory {
     final Document document = this.build(path);
 
     if(!this.includePaths.isEmpty()) {
-      final PreProcessor pp = new PreProcessor(path);
+      final PreProcessor pp = new IncludePreProcessor(path);
       pp.processChildren(document.getRootElement());
     }
 
     return document;
   }
 
-  private @NonNull Document build(final @NonNull Path path) throws XMLException {
-    try {
-      return this.builder.build(path.toFile());
-    } catch(final IOException e) {
-      throw new XMLException("Encountered an exception while reading", e);
-    } catch(final JDOMException e) {
-      throw new XMLException("Encountered an exception while parsing", e);
-    }
-  }
-
-  final class PreProcessor {
+  final class IncludePreProcessor extends PreProcessor {
     private final Path path;
 
-    PreProcessor(final @NonNull Path path) {
+    IncludePreProcessor(final @NonNull Path path) {
       this.path = path;
     }
 
-    void processChildren(final Element parent) throws XMLException {
-      for(int i = 0; i < parent.getContentSize(); i++) {
-        final Content content = parent.getContent(i);
-        if(!(content instanceof Element)) {
-          continue;
-        }
-
-        final Element child = (Element) content;
-        if(this.processChild(i, parent, child)) {
-          i--;
-        } else {
-          this.processChildren(child);
-        }
-      }
-    }
-
-    private boolean processChild(final int index, final Element parent, final Element child) throws XMLException {
+    @Override
+    boolean processChild(final int index, final Element parent, final Element child) throws XMLException {
       if(child.getName().equals(INCLUDE_ELEMENT_NAME)) {
         parent.setContent(index, this.readInclude(child));
         return true;
@@ -103,7 +75,7 @@ final class DocumentFactoryImpl implements DocumentFactory {
     }
 
     private List<Content> readInclude(final Element element) throws XMLException {
-      final Path src = Paths.get(Node.of(element).attribute("src").get().value());
+      final Path src = Paths.get(Node.of(element).attribute("src").orThrow(NoSuchElementException::new).value());
       return this.readInclude(src, element);
     }
 
@@ -116,14 +88,14 @@ final class DocumentFactoryImpl implements DocumentFactory {
     }
 
     private Document readDocument(final Path path) throws XMLException {
-      final Document document = DocumentFactoryImpl.this.build(path);
+      final Document document = IncludingDocumentFactory.this.build(path);
       this.processChildren(document.getRootElement());
       return document;
     }
 
     private @Nullable Path findInclude(final Path include) {
-      final List<Path> includePaths = new ArrayList<>(DocumentFactoryImpl.this.includePaths);
-      final @Nullable Path basePath = this.path.getParent();
+      final List<Path> includePaths = new ArrayList<>(IncludingDocumentFactory.this.includePaths);
+      final /* @Nullable */ Path basePath = this.path.getParent();
       if(basePath != null) {
         includePaths.add(0, basePath);
       }
