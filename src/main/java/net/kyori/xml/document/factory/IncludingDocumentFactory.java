@@ -75,7 +75,7 @@ final class IncludingDocumentFactory extends AbstractDocumentFactory {
     }
 
     private List<Content> readInclude(final Element element) throws XMLException {
-      final Path src = Paths.get(Node.of(element).attribute("src").orThrow(NoSuchElementException::new).value());
+      final Path src = Paths.get(Node.of(element).attribute("src").orThrow().value());
       return this.readInclude(src, element);
     }
 

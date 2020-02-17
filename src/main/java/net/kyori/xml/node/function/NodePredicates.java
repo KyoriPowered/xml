@@ -24,7 +24,6 @@
 package net.kyori.xml.node.function;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.kyori.xml.node.Node;
@@ -62,7 +61,7 @@ public final class NodePredicates {
    * @return a node predicate
    */
   public static @NonNull NodePredicate named(final @NonNull String name) {
-    return named(Collections.singleton(name));
+    return (node, depth) -> node.name().equals(name);
   }
 
   /**

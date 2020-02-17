@@ -24,7 +24,6 @@
 package net.kyori.xml.element;
 
 import java.io.IOException;
-import java.util.NoSuchElementException;
 import net.kyori.xml.Testing;
 import net.kyori.xml.node.ElementNode;
 import net.kyori.xml.node.Node;
@@ -48,13 +47,13 @@ class InheritedElementTest {
 
   @Test
   void testInherit() {
-    final Node source = this.root.element("things").orThrow(NoSuchElementException::new).element("thing").orThrow(NoSuchElementException::new);
-    assertEquals("fed", source.attribute("abc").orThrow(NoSuchElementException::new).value());
+    final Node source = this.root.element("things").orThrow().element("thing").orThrow();
+    assertEquals("fed", source.attribute("abc").orThrow().value());
     assertNull(source.attribute("ghi").orDefault(null));
 
     final Node target = ((ElementNode) source).inherited();
-    assertEquals("fed", target.attribute("abc").orThrow(NoSuchElementException::new).value());
-    assertEquals("jkl", target.attribute("ghi").orThrow(NoSuchElementException::new).value());
+    assertEquals("fed", target.attribute("abc").orThrow().value());
+    assertEquals("jkl", target.attribute("ghi").orThrow().value());
 
     final Node again = ((ElementNode) target).inherited();
     assertSame(target, again);

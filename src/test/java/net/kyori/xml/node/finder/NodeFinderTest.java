@@ -25,9 +25,7 @@ package net.kyori.xml.node.finder;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
-import net.kyori.mu.Maybe;
 import net.kyori.xml.Testing;
 import net.kyori.xml.node.Node;
 import org.jdom2.JDOMException;
@@ -49,7 +47,7 @@ class NodeFinderTest {
   @Test
   void testBranchLeaf() {
     final NodeFinder finder = new BranchLeafNodeFinder("things", "thing");
-    final List<Node> nodes = finder.nodes(this.root.elements().collect(Maybe.collector()).orThrow(NoSuchElementException::new)).collect(Collectors.toList());
+    final List<Node> nodes = finder.nodes(this.root.element("things").orThrow()).collect(Collectors.toList());
     assertEquals(2, nodes.size());
     nodes.forEach(node -> assertEquals("thing", node.name()));
   }
