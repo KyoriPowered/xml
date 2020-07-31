@@ -21,23 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.node.parser.number;
+package net.kyori.xml.node.parser;
 
-import net.kyori.violet.AbstractModule;
-import net.kyori.xml.node.parser.ParserBinder;
+import java.util.List;
+import java.util.stream.Collectors;
+import net.kyori.xml.XMLException;
+import net.kyori.xml.node.Node;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
- * A module that binds parsers for numbers.
+ * A parser that produces a {@link List} of {@code T}.
+ *
+ * @param <T> the type
  */
-public final class NumberParserModule extends AbstractModule {
+public class ListParser<T> implements Parser<List<T>> {
+  private final Parser<T> parser;
+
+  public ListParser(final @NonNull Parser<T> parser) {
+    this.parser = parser;
+  }
+
   @Override
-  protected void configure() {
-    final ParserBinder parsers = new ParserBinder(this.binder());
-    parsers.bind(Byte.class).toInstance(ByteParser.get());
-    parsers.bind(Double.class).toInstance(DoubleParser.get());
-    parsers.bind(Float.class).toInstance(FloatParser.get());
-    parsers.bind(Integer.class).toInstance(IntParser.get());
-    parsers.bind(Long.class).toInstance(LongParser.get());
-    parsers.bind(Short.class).toInstance(ShortParser.get());
+  public @NonNull List<T> throwingParse(final @NonNull Node node) throws XMLException {
+    return node.nodes().map(this.parser::parse).collect(Collectors.toList());
   }
 }

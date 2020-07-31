@@ -23,7 +23,6 @@
  */
 package net.kyori.xml.node.parser.number;
 
-import javax.inject.Singleton;
 import net.kyori.xml.XMLException;
 import net.kyori.xml.node.Node;
 import net.kyori.xml.node.parser.ParseException;
@@ -32,7 +31,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 /**
  * Parses a {@link Node} into a {@link Long long}.
  */
-@Singleton
 public class LongParser implements NumberParser<Long> {
   private static final LongParser INSTANCE = new LongParser();
 

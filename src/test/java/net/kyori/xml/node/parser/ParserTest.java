@@ -23,8 +23,11 @@
  */
 package net.kyori.xml.node.parser;
 
+import java.util.function.Consumer;
+
 import static net.kyori.xml.Testing.element;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ParserTest<T> {
   protected final Parser<T> parser;
@@ -35,6 +38,10 @@ public class ParserTest<T> {
 
   protected final void assertParse(final T expected, final String string) {
     assertEquals(expected, this.parse(string));
+  }
+
+  protected final void assertParseThrows(final String string, final Consumer<ParseException> consumer) {
+    consumer.accept(assertThrows(ParseException.class, () -> this.parse(string)));
   }
 
   private T parse(final String string) {

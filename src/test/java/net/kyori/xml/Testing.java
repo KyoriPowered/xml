@@ -25,25 +25,31 @@ package net.kyori.xml;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.function.Consumer;
 import net.kyori.xml.node.Node;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 
 public interface Testing {
-  static @NonNull Node read(final @NonNull String path) throws IOException, JDOMException {
+  static Node read(final String path) throws IOException, JDOMException {
     final SAXBuilder builder = new SAXBuilder();
     try(final InputStream is = Testing.class.getResourceAsStream(path)) {
       return Node.of(builder.build(is).getRootElement());
     }
   }
 
-  static @NonNull Node element(final @NonNull String name) {
+  static Node element(final String name) {
     return Node.of(new Element(name));
   }
 
-  static @NonNull Node element(final @NonNull String name, final @NonNull String value) {
+  static Node element(final String name, final Consumer<Element> consumer) {
+    final Element element = new Element(name);
+    consumer.accept(element);
+    return Node.of(element);
+  }
+
+  static Node element(final String name, final String value) {
     return Node.of(new Element(name).setText(value));
   }
 }

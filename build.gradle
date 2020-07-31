@@ -31,10 +31,8 @@ repositories {
 
 dependencies {
   compile 'net.kyori:mu:1.0.0-SNAPSHOT'
-  compileOnly 'net.kyori:violet:1.0.0'
   compile 'org.checkerframework:checker-qual:2.4.0'
   compile 'org.jdom:jdom2:2.0.6'
-  testCompileOnly 'net.kyori:violet:1.0.0'
   testCompile 'com.google.truth:truth:0.42'
   testCompile 'com.google.truth.extensions:truth-java8-extension:0.42'
   testCompile 'org.junit.jupiter:junit-jupiter-api:5.3.1'

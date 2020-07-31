@@ -23,7 +23,6 @@
  */
 package net.kyori.xml.node.parser;
 
-import com.google.inject.TypeLiteral;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -33,7 +32,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Stream;
-import javax.inject.Inject;
 import net.kyori.mu.Maybe;
 import net.kyori.mu.reflect.Fields;
 import net.kyori.xml.XMLException;
@@ -47,19 +45,13 @@ public class EnumParser<E extends Enum<E>> implements PrimitiveParser<E> {
   private final Class<E> type;
   private final Map<String, E> map;
 
-  @Inject
-  public EnumParser(final @NonNull TypeLiteral<E> type) {
-    this((Class<E>) type.getRawType());
+  public EnumParser(final @NonNull Class<E> type) {
+    this(type, names(type));
   }
 
-  public EnumParser(final @NonNull Class<E> type) {
+  public EnumParser(final @NonNull Class<E> type, final @NonNull Map<String, E> map) {
     this.type = type;
-
-    final E[] constants = type.getEnumConstants();
-    this.map = new HashMap<>(constants.length);
-    for(final E constant : constants) {
-      names(constant).forEach(name -> this.map.put(name, constant));
-    }
+    this.map = map;
   }
 
   @Override
@@ -71,8 +63,17 @@ public class EnumParser<E extends Enum<E>> implements PrimitiveParser<E> {
     throw new ParseException(node, "Could not find " + this.type.getName() + " with name '" + string + '\'');
   }
 
+  private static <E extends Enum<E>> Map<String, E> names(final @NonNull Class<E> type) {
+    final E[] constants = type.getEnumConstants();
+    final Map<String, E> map = new HashMap<>(constants.length);
+    for(final E constant : constants) {
+      names(constant).forEach(name -> map.put(name, constant));
+    }
+    return map;
+  }
+
   private static @NonNull Stream<String> names(final @NonNull Enum<?> constant) {
-    return Maybe.maybe(Fields.get(constant).getAnnotation(Names.class))
+    return Maybe.maybe(Fields.field(constant).getAnnotation(Names.class))
       .map(names -> Arrays.stream(names.value()))
       .orGet(() -> defaultNames(constant));
   }

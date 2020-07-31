@@ -21,21 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.node.parser;
+package net.kyori.xml;
 
-import net.kyori.violet.AbstractModule;
-import net.kyori.xml.node.parser.number.NumberParserModule;
+import net.kyori.xml.node.Node;
+import net.kyori.xml.node.parser.BooleanParser;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
- * A module that binds common parsers.
+ * XML utilities.
  */
-public final class ParserModule extends AbstractModule {
-  @Override
-  protected void configure() {
-    this.install(new NumberParserModule());
-
-    final ParserBinder parsers = new ParserBinder(this.binder());
-    parsers.bind(Boolean.class).toInstance(BooleanParser.get());
-    parsers.bind(String.class).toInstance(StringParser.get());
+public interface XML {
+  /**
+   * Parses an attribute named {@code name} in {@code node}, or returns {@code defaultValue}.
+   *
+   * @param node the node
+   * @param name the attribute name
+   * @param defaultValue the default value
+   * @return a boolean
+   */
+  static boolean attrBoolean(final @NonNull Node node, final @NonNull String name, final boolean defaultValue) {
+    return node.attribute(name)
+      .map(BooleanParser.get())
+      .orDefault(defaultValue);
   }
 }

@@ -21,29 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.xml.node.parser;
+package net.kyori.xml;
 
+import net.kyori.mu.Composer;
+import net.kyori.xml.node.Node;
+import org.jdom2.Element;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class BooleanParserTest extends ParserTest<Boolean> {
-  BooleanParserTest() {
-    super(BooleanParser.get());
-  }
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-  @Test
-  void testFalseParse() {
-    this.assertParse(false, "false");
-  }
+class XMLTest {
+  private final Node node = Composer.make(new Element("root"), element -> {
+    element.setAttribute("boolean-false", Boolean.toString(false));
+    element.setAttribute("boolean-true", Boolean.toString(true));
+  }, Node::of);
 
   @Test
-  void testTrueParse() {
-    this.assertParse(true, "true");
-  }
-
-  @Test
-  void testInvalidParse() {
-    this.assertParseThrows("yes", exception -> {});
+  void testAttrBoolean() {
+    assertFalse(XML.attrBoolean(this.node, "boolean-false", true));
+    assertTrue(XML.attrBoolean(this.node, "boolean-true", false));
   }
 }

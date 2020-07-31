@@ -23,7 +23,6 @@
  */
 package net.kyori.xml.node.parser;
 
-import javax.inject.Singleton;
 import net.kyori.xml.XMLException;
 import net.kyori.xml.node.Node;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -31,7 +30,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 /**
  * Parses a {@link Node} into a {@link Boolean boolean}.
  */
-@Singleton
 public class BooleanParser implements PrimitiveParser<Boolean> {
   private static final BooleanParser INSTANCE = new BooleanParser();
 
@@ -54,10 +52,12 @@ public class BooleanParser implements PrimitiveParser<Boolean> {
     throw new ParseException(node, "Could not parse '" + string + "' as a boolean");
   }
 
+  // override to allow more true-like choices
   protected boolean isTrue(final @NonNull String string) {
     return string.equals("true");
   }
 
+  // override to allow more false-like choices
   protected boolean isFalse(final @NonNull String string) {
     return string.equals("false");
   }
